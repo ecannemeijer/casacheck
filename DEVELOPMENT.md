@@ -55,3 +55,8 @@ Zonder dat bestand wordt de release-APK niet ondertekend.
 - De gedownloade APK wordt alleen aangeboden als pakketnaam en ondertekeningscertificaat gelijk zijn aan de geïnstalleerde app; daarna installeert de systeeminstaller (gebruiker bevestigt). Rechten: `REQUEST_INSTALL_PACKAGES`.
 - Debug-builds controleren niet op updates.
 - Releasestappen: versionCode/versionName ophogen, `assembleRelease`, `apksigner verify`, GitHub-release `vX.Y.Z` (latest) met de APK als asset.
+
+## Vertalen en Italiaanse vragen
+- Vertalen (Italiaans → Nederlands) gebeurt op het toestel met ML Kit Translation (`data/translate`). Het taalmodel (~30 MB per taal) wordt bij het eerste gebruik gedownload; daarna offline. Instelling "Vertaalmodel alleen via wifi downloaden" in Instellingen.
+- Vertalingen van titel/omschrijving worden gecachet in de tabel `translation` (Room v3, `Migrations.MIGRATION_2_3`, getest in `MigrationTest`). Een gewijzigde advertentietekst (andere hash) wordt opnieuw vertaald.
+- Vragen per controlepunt staan als gestructureerde data in `domain/checklist/CheckpointQuestions*.kt` (IT + NL). `CheckpointQuestionsTest` controleert dat elk controlepunt minstens 2 vragen heeft.

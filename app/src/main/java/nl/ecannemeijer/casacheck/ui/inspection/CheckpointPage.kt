@@ -179,10 +179,10 @@ fun CheckpointPage(c: AppContainer, nav: Nav, item: ItemWithResult, roomName: St
                 Text(stringResource(R.string.possible_cause), style = MaterialTheme.typography.titleSmall); Text(stringResource(def.causes))
                 Text(stringResource(R.string.consequences), style = MaterialTheme.typography.titleSmall); Text(stringResource(def.consequences))
                 Text(stringResource(R.string.possible_solution), style = MaterialTheme.typography.titleSmall); Text(stringResource(def.repair))
-                Text(stringResource(R.string.which_expert), style = MaterialTheme.typography.titleSmall); Text(stringResource(def.expert))
+                if (def.expert != 0) { Text(stringResource(R.string.which_expert), style = MaterialTheme.typography.titleSmall); Text(stringResource(def.expert)) }
             }
             if (def.hasCost) Text(stringResource(R.string.indicative_cost, Fmt.range(def.costMinEur, def.costMaxEur)), style = MaterialTheme.typography.bodyMedium)
-            WarningCard(stringResource(def.warning), MaterialTheme.colorScheme.tertiary)
+            if (def.warning != 0) WarningCard(stringResource(def.warning), MaterialTheme.colorScheme.tertiary)
         }
         if (status.isDefect) SectionCard(stringResource(R.string.cost_estimate)) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

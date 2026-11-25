@@ -136,7 +136,8 @@ fun PropertyListScreen(c: AppContainer, nav: Nav) {
     var sortMenu by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(setOf<Long>()) }
     var confirmDelete by remember { mutableStateOf<PropertyCard?>(null) }
-    val copySuffix = stringResource(R.string.copy_suffix)
+    // aapt strips leading spaces from string resources, so the separating space is added here.
+    val copySuffix = " " + stringResource(R.string.copy_suffix).trim()
 
     Scaffold(floatingActionButton = {
         if (selected.size >= 2) ExtendedFloatingActionButton(onClick = { nav.compare(selected.toList()); selected = emptySet() }, icon = { Icon(Icons.Filled.CompareArrows, null) }, text = { Text(stringResource(R.string.compare_selected, selected.size)) })

@@ -34,6 +34,6 @@ fun PropertyDeleteHost(deletion: PropertyDeletion) {
         if (host.showSnackbar(msg ?: "", undo, duration = SnackbarDuration.Indefinite) == SnackbarResult.ActionPerformed) deletion.undo(p.id)
     }
     Box(Modifier.fillMaxSize()) {
-        SnackbarHost(host, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 88.dp))
+        SnackbarHost(host, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 156.dp)) // above bottom bar and FAB
     }
 }

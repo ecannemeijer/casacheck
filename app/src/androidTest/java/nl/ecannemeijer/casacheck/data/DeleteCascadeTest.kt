@@ -12,6 +12,8 @@ import nl.ecannemeijer.casacheck.data.db.Defect
 import nl.ecannemeijer.casacheck.data.db.Document
 import nl.ecannemeijer.casacheck.data.db.DocumentFile
 import nl.ecannemeijer.casacheck.data.db.Floor
+import nl.ecannemeijer.casacheck.data.db.ImportHistory
+import nl.ecannemeijer.casacheck.data.db.ImportStatus
 import nl.ecannemeijer.casacheck.data.db.InspectionItem
 import nl.ecannemeijer.casacheck.data.db.InspectionResult
 import nl.ecannemeijer.casacheck.data.db.MoistureMeasurement
@@ -73,6 +75,7 @@ class DeleteCascadeTest {
         db.measurementDao().insertPoints(listOf(MoistureMeasurementPoint(measurementId = moist, heightCm = 10, value = 30.0)))
         val crack = db.measurementDao().insertCrack(CrackMeasurement(propertyId = pid, roomId = room, location = "muur"))
         val doc = db.documentDao().upsert(Document(propertyId = pid, typeCode = "ape"))
+        db.listingDao().insertImport(ImportHistory(propertyId = pid, source = "idealista", url = "https://www.idealista.it/immobile/1/", status = ImportStatus.SUCCESS))
 
         val created = mutableListOf<File>()
         val ids = (1..2).map { n ->
@@ -99,11 +102,12 @@ class DeleteCascadeTest {
         "crack_measurement WHERE propertyId = ${s.pid}", "document WHERE propertyId = ${s.pid}", "document_file WHERE documentId = ${s.docId}",
         "photo WHERE propertyId = ${s.pid}", "photo_inspection_link WHERE itemId = ${s.itemId}",
         "photo_annotation WHERE photoId IN (${s.photoIds.joinToString()})", "report WHERE propertyId = ${s.pid}",
+        "import_history WHERE propertyId = ${s.pid}",
     ).sumOf { count(it) }
 
     @Test fun deletingPropertyRemovesAllRowsAndFilesButNotOtherProperty() = runBlocking<Unit> {
         val a = seed("A"); val b = seed("B")
-        assertThat(rowsOf(a)).isEqualTo(19)
+        assertThat(rowsOf(a)).isEqualTo(20)
         assertThat(a.files.all { it.exists() }).isTrue()
 
         props.delete(a.pid)
@@ -111,7 +115,7 @@ class DeleteCascadeTest {
         assertThat(rowsOf(a)).isEqualTo(0)
         assertThat(a.files.none { it.exists() }).isTrue()
         listOf("photos", "thumbs", "docs", "edited").forEach { assertThat(File(files.root, "$it/${a.uuid}").exists()).isFalse() }
-        assertThat(rowsOf(b)).isEqualTo(19)
+        assertThat(rowsOf(b)).isEqualTo(20)
         assertThat(b.files.all { it.exists() }).isTrue()
         props.delete(b.pid)
         assertThat(b.files.none { it.exists() }).isTrue()

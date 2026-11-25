@@ -92,6 +92,7 @@ interface ListingDao {
     @Query("SELECT * FROM price_history WHERE propertyId = :pid ORDER BY recordedAt") suspend fun prices(pid: Long): List<PropertyPriceHistory>
     @Insert suspend fun insertPrice(p: PropertyPriceHistory): Long
     @Insert suspend fun insertImport(h: ImportHistory): Long
+    @Query("DELETE FROM import_history WHERE propertyId = :pid") suspend fun deleteImports(pid: Long)
     @Query("SELECT * FROM import_history ORDER BY startedAt DESC LIMIT 50") fun observeImports(): Flow<List<ImportHistory>>
     @Query("SELECT * FROM import_history WHERE propertyId = :pid ORDER BY startedAt DESC") suspend fun importsFor(pid: Long): List<ImportHistory>
 }

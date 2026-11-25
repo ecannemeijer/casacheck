@@ -129,7 +129,8 @@ class PropertyRepository(
     /**
      * Deletes one property for good. Foreign keys (ON DELETE CASCADE) remove all its rows: features, listing, prices, floors,
      * rooms, checklist items and results, sessions, defects, repair projects, costs, moisture/crack measurements, documents,
-     * photos (+ links/annotations), agent answers, appointments, environment ratings, distances and report rows.
+     * photos (+ links/annotations), agent answers, appointments, environment ratings, distances and report rows;
+     * its import-history rows are deleted explicitly.
      * Afterwards its files are removed from disk: the per-property photo/thumb/doc/edited folders and the generated PDFs.
      * Returns the number of files/folders removed.
      */
@@ -139,6 +140,7 @@ class PropertyRepository(
             val photos = db.photoDao().list(id)
             val docs = db.documentDao().files(id)
             val reports = db.reportDao().forProperty(id)
+            db.listingDao().deleteImports(id) // would otherwise be kept (SET_NULL) with the listing URL
             dao.delete(id)
             FileCleanup.planForProperty(p.uuid,
                 photos.flatMap { listOf(it.filePath, it.thumbPath, it.editedPath) } + docs.map { it.filePath } + reports.map { it.filePath })

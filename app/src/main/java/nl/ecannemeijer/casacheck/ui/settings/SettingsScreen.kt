@@ -186,6 +186,9 @@ fun SettingsScreen(c: AppContainer, nav: Nav) {
             SectionCard(stringResource(R.string.about)) {
                 Text("CasaCheck ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
                 Text(stringResource(R.string.about_text), style = MaterialTheme.typography.bodySmall)
+                val upd by c.updates.state.collectAsState()
+                OutlinedButton(enabled = upd !is nl.ecannemeijer.casacheck.data.update.UpdateState.Checking && upd !is nl.ecannemeijer.casacheck.data.update.UpdateState.Downloading, onClick = { scope.launch { c.updates.check(manual = true) } }) { Text(stringResource(R.string.update_check)) }
+                Text(stringResource(R.string.update_auto_note), style = MaterialTheme.typography.bodySmall)
                 InfoNote(stringResource(R.string.score_not_guarantee))
             }
         }

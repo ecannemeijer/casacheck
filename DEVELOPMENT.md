@@ -48,3 +48,10 @@ Zonder dat bestand wordt de release-APK niet ondertekend.
 ## Bekende keuzes
 - Geen Play Billing, geen Play Integrity, geen in-app updates (sideload).
 - Geen omzeiling van bot-bescherming; bij 403 volgt een duidelijke melding met alternatieven.
+
+## Updates
+- De app controleert `https://api.github.com/repos/ecannemeijer/casacheck/releases/latest` (zonder token) bij het starten/hervatten, hooguit elke 6 uur, en handmatig via Instellingen.
+- Een release moet een tag `vX.Y.Z` hebben (hoger dan `versionName`), een hogere `versionCode` en een `.apk`-asset (bij voorkeur `CasaCheck-X.Y.Z.apk`). Prereleases en drafts worden genegeerd.
+- De gedownloade APK wordt alleen aangeboden als pakketnaam en ondertekeningscertificaat gelijk zijn aan de geïnstalleerde app; daarna installeert de systeeminstaller (gebruiker bevestigt). Rechten: `REQUEST_INSTALL_PACKAGES`.
+- Debug-builds controleren niet op updates.
+- Releasestappen: versionCode/versionName ophogen, `assembleRelease`, `apksigner verify`, GitHub-release `vX.Y.Z` (latest) met de APK als asset.

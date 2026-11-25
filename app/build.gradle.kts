@@ -27,6 +27,8 @@ android {
     defaultConfig {
         applicationId = "nl.ecannemeijer.casacheck"
         minSdk = 26
+        // Phones/tablets (ARM) plus x86_64 for the emulator; 32-bit x86 devices are practically non-existent.
+        ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
         targetSdk = 35
         versionCode = 3
         versionName = "1.0.2"
@@ -72,6 +74,8 @@ android {
     }
     packaging {
         resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/LICENSE*", "META-INF/NOTICE*")
+        // ML Kit (OCR + translate) native libraries are large; store them compressed in the APK to keep the download small.
+        jniLibs.useLegacyPackaging = true
     }
     sourceSets {
         // Exported Room schemas are used by MigrationTestHelper in instrumented tests.

@@ -108,7 +108,7 @@ fun CompareScreen(c: AppContainer, nav: Nav, ids: List<Long>) {
         val list = cols
         if (list == null) Box(Modifier.fillMaxSize().padding(pad), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
         else Column(Modifier.fillMaxSize().padding(pad).verticalScroll(rememberScrollState())) {
-            if (list.size < 2) InfoNote(stringResource(R.string.compare_need_two))
+            if (list.size < 2) { ComparePicker(c, nav, ids); return@Column }
             Column(Modifier.horizontalScroll(rememberScrollState()).padding(8.dp)) {
                 Row {
                     Box(Modifier.width(LABEL_W))
@@ -193,4 +193,25 @@ fun CompareScreen(c: AppContainer, nav: Nav, ids: List<Long>) {
 private fun ppsqm(c: CompareCol): Long? = c.s.property.pricePerSqm ?: run {
     val p = c.s.property.askingPrice; val a = c.s.property.livingArea
     if (p != null && a != null && a > 0) Math.round(p / a) else null
+}
+
+@Composable
+private fun ComparePicker(c: AppContainer, nav: Nav, initial: List<Long>) {
+    val cards by remember { c.properties.observeCards() }.collectAsStateWithLifecycle(emptyList())
+    var sel by remember { mutableStateOf(initial.toSet()) }
+    Column(Modifier.padding(12.dp)) {
+        InfoNote(stringResource(R.string.compare_pick_hint, sel.size))
+        cards.filter { !it.property.archived }.forEach { card ->
+            val p = card.property
+            Row(Modifier.fillMaxWidth().clickable { sel = if (p.id in sel) sel - p.id else if (sel.size < 4) sel + p.id else sel }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                androidx.compose.material3.Checkbox(p.id in sel, null)
+                Thumb(CasaFiles.file(card.thumbPath), Modifier.width(64.dp).height(48.dp))
+                Column(Modifier.padding(start = 8.dp)) {
+                    Text(p.title.ifBlank { stringResource(R.string.untitled_property) }, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(listOfNotNull(p.city, Fmt.euro(p.askingPrice)).joinToString(" · "), style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        }
+        androidx.compose.material3.Button(enabled = sel.size >= 2, onClick = { nav.compare(sel.toList()) }, modifier = Modifier.padding(top = 12.dp)) { Text(stringResource(R.string.compare)) }
+    }
 }

@@ -200,11 +200,13 @@ class PropertyRepository(
         val listing = db.listingDao().get(propertyId)
         val oldUrls = listing?.lastPhotoUrls?.split('\n')?.filter { it.isNotBlank() }?.toSet()
             ?: db.photoDao().listingPhotos(propertyId).map { it.sourceUrl }.toSet()
-        val newUrls = d.photos.map { it.url }
+        // A refresh without photo information (e.g. from pasted text) never marks photos as removed.
+        val hasPhotos = d.photos.isNotEmpty()
+        val newUrls = if (hasPhotos) d.photos.map { it.url } else oldUrls.toList()
         val added = newUrls.filter { it !in oldUrls }
         val removed = oldUrls.filter { it !in newUrls.toSet() }
         // Mark removed photos (the local files are kept).
-        db.photoDao().listingPhotos(propertyId).forEach { lp ->
+        if (hasPhotos) db.photoDao().listingPhotos(propertyId).forEach { lp ->
             val isRemoved = lp.sourceUrl in removed
             if (lp.removedFromListing != isRemoved) db.photoDao().updateListingPhoto(lp.copy(removedFromListing = isRemoved))
         }

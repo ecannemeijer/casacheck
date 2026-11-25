@@ -147,6 +147,13 @@ class InspectionRepository(private val context: Context, private val db: CasaDat
         dao.lastSession(propertyId)?.takeIf { it.endedAt == null }?.let { dao.updateSession(it.copy(endedAt = System.currentTimeMillis())) }
     }
     suspend fun lastSession(propertyId: Long) = dao.lastSession(propertyId)
+    /** Remembers the current checkpoint so "continue last check" resumes exactly there; reopens/creates a session if needed. */
+    suspend fun setSessionPosition(propertyId: Long, mode: InspectionMode, roomId: Long?, category: String?, itemId: Long) {
+        val s = dao.lastSession(propertyId)
+        if (s != null && s.endedAt == null && s.mode == mode && s.roomId == roomId && s.categoryCode == category) dao.updateSession(s.copy(lastItemId = itemId))
+        else { s?.takeIf { it.endedAt == null }?.let { dao.updateSession(it.copy(endedAt = System.currentTimeMillis())) }
+            dao.insertSession(InspectionSession(propertyId = propertyId, mode = mode, roomId = roomId, categoryCode = category, lastItemId = itemId)) }
+    }
     fun observeLastSession(propertyId: Long) = dao.observeLastSession(propertyId)
     fun observeOpenSessions() = dao.observeOpenSessions()
 

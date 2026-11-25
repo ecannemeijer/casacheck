@@ -39,6 +39,7 @@ import nl.ecannemeijer.casacheck.ui.detail.AgentQuestionsScreen
 import nl.ecannemeijer.casacheck.ui.detail.CrackEditScreen
 import nl.ecannemeijer.casacheck.ui.detail.DefectEditScreen
 import nl.ecannemeijer.casacheck.ui.detail.EditPropertyScreen
+import nl.ecannemeijer.casacheck.ui.detail.InspectionQuestionsScreen
 import nl.ecannemeijer.casacheck.ui.detail.MoistureEditScreen
 import nl.ecannemeijer.casacheck.ui.detail.PropertyDetailScreen
 import nl.ecannemeijer.casacheck.ui.detail.RoomEditScreen
@@ -61,7 +62,7 @@ class Nav(private val c: NavHostController) {
     fun back() { c.popBackStack() }
     /** After deleting a property: pop every screen that belongs to it (detail, edit, wizard, photos, ...). */
     fun leaveProperty() {
-        val inner = setOf("property", "edit", "wizard", "item", "camera", "photo", "annotate", "photocompare", "room", "defect", "moisture", "crack", "agent")
+        val inner = setOf("property", "edit", "wizard", "item", "camera", "photo", "annotate", "photocompare", "room", "defect", "moisture", "crack", "agent", "cpq")
         while (c.previousBackStackEntry != null && c.currentDestination?.route?.substringBefore('/')?.substringBefore('?') in inner) {
             if (!c.popBackStack()) break
         }
@@ -83,6 +84,7 @@ class Nav(private val c: NavHostController) {
     fun moisture(pid: Long, id: Long = -1) = c.navigate("moisture/$pid?id=$id")
     fun crack(pid: Long, id: Long = -1, prev: Long = -1) = c.navigate("crack/$pid?id=$id&prev=$prev")
     fun agent(pid: Long) = c.navigate("agent/$pid")
+    fun checkpointQuestions(pid: Long) = c.navigate("cpq/$pid")
     fun preferences() = c.navigate("preferences")
     fun compare(ids: List<Long>) = c.navigate("compare?ids=${ids.joinToString(",")}") { launchSingleTop = true }
 }
@@ -171,6 +173,7 @@ fun CasaNavHost(container: AppContainer, shared: SharedPayload?, onSharedConsume
                 CrackEditScreen(container, nav, it.arguments!!.getLong("pid"), it.arguments!!.getLong("id").orNull(), it.arguments!!.getLong("prev").orNull())
             }
             composable("agent/{pid}", arguments = listOf(navArgument("pid") { type = NavType.LongType })) { AgentQuestionsScreen(container, nav, it.arguments!!.getLong("pid")) }
+            composable("cpq/{pid}", arguments = listOf(navArgument("pid") { type = NavType.LongType })) { InspectionQuestionsScreen(container, nav, it.arguments!!.getLong("pid")) }
         }
     }
 }

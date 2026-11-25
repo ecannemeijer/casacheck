@@ -140,6 +140,7 @@ fun CheckpointPage(c: AppContainer, nav: Nav, item: ItemWithResult, roomName: St
                 Text(stringResource(R.string.abnormal), style = MaterialTheme.typography.titleSmall); Text(stringResource(def.abnormal))
                 if (def.tools.isNotEmpty()) Text(stringResource(R.string.tools) + ": " + def.tools.mapNotNull { t -> CheckpointLibrary.tools[t] }.map { stringResource(it) }.joinToString(), style = MaterialTheme.typography.bodyMedium)
             }
+            CheckpointQuestionsSection(item.templateCode, c.inspections.titleOf(item), item.id)
             if (def.illustration != 0) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.reference_illustration), Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)

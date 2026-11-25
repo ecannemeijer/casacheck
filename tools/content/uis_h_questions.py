@@ -1,0 +1,9 @@
+S = [
+("cp_questions_title", "Vragen om te stellen (Italiaans)", "Questions to ask (Italian)", "Domande da fare"),
+("cp_questions_hint", "Stel deze vragen aan de verkoper, makelaar of geometra. Tik op de luidspreker om ze in het Italiaans te laten voorlezen. Dit is een hulpmiddel, geen juridisch advies.", "Ask these questions to the seller, agent or geometra. Tap the speaker to hear them read aloud in Italian. This is an aid, not legal advice.", "Fai queste domande al venditore, all'agente o al geometra. Tocca l'altoparlante per ascoltarle. È un aiuto, non una consulenza legale."),
+("cp_questions_overview", "Vragen bij twijfel en gebreken", "Questions for doubts and defects", "Domande per dubbi e difetti"),
+("cp_questions_overview_help", "Hier staan de Italiaanse vragen voor alle controlepunten die je als Onzeker of als gebrek hebt gemarkeerd. Deel ze als tekst of neem ze mee in het rapport (type Makelaar of Volledig).", "These are the Italian questions for all checkpoints you marked as Unsure or as a defect. Share them as text or include them in the report (Agent or Full type).", "Qui trovi le domande per tutti i punti di controllo segnati come Incerto o come difetto. Condividile come testo o includile nel rapporto (tipo Agente o Completo)."),
+("cp_questions_none", "Nog geen controlepunten met Onzeker of een gebrek. Markeer een controlepunt om de vragen hier te zien.", "No checkpoints marked Unsure or as a defect yet. Mark a checkpoint to see its questions here.", "Nessun punto di controllo segnato come Incerto o difetto. Segna un punto per vedere qui le domande."),
+("section_checkpoint_questions", "Vragen per controlepunt (Italiaans)", "Questions per checkpoint (Italian)", "Domande per punto di controllo"),
+("speak_all", "Alles voorlezen", "Read all aloud", "Leggi tutto"),
+]

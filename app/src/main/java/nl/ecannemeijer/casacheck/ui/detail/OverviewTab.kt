@@ -203,6 +203,7 @@ fun OverviewTab(vm: DetailVm, nav: Nav, goTab: (Int) -> Unit) {
                 if (p.latitude != null || !p.address.isNullOrBlank() || !p.city.isNullOrBlank())
                     OutlinedButton(onClick = { Intents.mapsLocation(ctx, p.latitude, p.longitude, listOfNotNull(p.address, p.city, p.province, "Italia").joinToString(", ")) }) { Icon(Icons.Filled.Map, null); Text(" " + stringResource(R.string.show_on_map)) }
                 OutlinedButton(onClick = { nav.agent(p.id) }) { Icon(Icons.Filled.QuestionAnswer, null); Text(" " + stringResource(R.string.agent_questions)) }
+                OutlinedButton(onClick = { nav.checkpointQuestions(p.id) }) { Icon(Icons.Filled.QuestionAnswer, null); Text(" " + stringResource(R.string.cp_questions_overview)) }
             }
             p.agentName?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
         }

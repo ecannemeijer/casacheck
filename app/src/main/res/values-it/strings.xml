@@ -711,4 +711,11 @@
     <string name="delete_photos_title">Eliminare le foto?</string>
     <string name="delete_photos_text">%1$d foto verranno eliminate definitivamente, anche dai punti di controllo, difetti e misurazioni collegati.</string>
     <string name="delete_selected">Elimina (%1$d)</string>
+    <string name="cp_questions_title">Domande da fare</string>
+    <string name="cp_questions_hint">Fai queste domande al venditore, all\'agente o al geometra. Tocca l\'altoparlante per ascoltarle. È un aiuto, non una consulenza legale.</string>
+    <string name="cp_questions_overview">Domande per dubbi e difetti</string>
+    <string name="cp_questions_overview_help">Qui trovi le domande per tutti i punti di controllo segnati come Incerto o come difetto. Condividile come testo o includile nel rapporto (tipo Agente o Completo).</string>
+    <string name="cp_questions_none">Nessun punto di controllo segnato come Incerto o difetto. Segna un punto per vedere qui le domande.</string>
+    <string name="section_checkpoint_questions">Domande per punto di controllo</string>
+    <string name="speak_all">Leggi tutto</string>
 </resources>

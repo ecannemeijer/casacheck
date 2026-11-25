@@ -711,4 +711,11 @@
     <string name="delete_photos_title">Delete photos?</string>
     <string name="delete_photos_text">%1$d photos will be deleted permanently, including from linked checkpoints, defects and measurements.</string>
     <string name="delete_selected">Delete (%1$d)</string>
+    <string name="cp_questions_title">Questions to ask (Italian)</string>
+    <string name="cp_questions_hint">Ask these questions to the seller, agent or geometra. Tap the speaker to hear them read aloud in Italian. This is an aid, not legal advice.</string>
+    <string name="cp_questions_overview">Questions for doubts and defects</string>
+    <string name="cp_questions_overview_help">These are the Italian questions for all checkpoints you marked as Unsure or as a defect. Share them as text or include them in the report (Agent or Full type).</string>
+    <string name="cp_questions_none">No checkpoints marked Unsure or as a defect yet. Mark a checkpoint to see its questions here.</string>
+    <string name="section_checkpoint_questions">Questions per checkpoint (Italian)</string>
+    <string name="speak_all">Read all aloud</string>
 </resources>

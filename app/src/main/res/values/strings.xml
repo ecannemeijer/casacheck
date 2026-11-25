@@ -712,4 +712,11 @@
     <string name="delete_photos_title">Foto\'s verwijderen?</string>
     <string name="delete_photos_text">%1$d foto\'s worden definitief verwijderd, ook bij gekoppelde controlepunten, gebreken en metingen.</string>
     <string name="delete_selected">Verwijderen (%1$d)</string>
+    <string name="cp_questions_title">Vragen om te stellen (Italiaans)</string>
+    <string name="cp_questions_hint">Stel deze vragen aan de verkoper, makelaar of geometra. Tik op de luidspreker om ze in het Italiaans te laten voorlezen. Dit is een hulpmiddel, geen juridisch advies.</string>
+    <string name="cp_questions_overview">Vragen bij twijfel en gebreken</string>
+    <string name="cp_questions_overview_help">Hier staan de Italiaanse vragen voor alle controlepunten die je als Onzeker of als gebrek hebt gemarkeerd. Deel ze als tekst of neem ze mee in het rapport (type Makelaar of Volledig).</string>
+    <string name="cp_questions_none">Nog geen controlepunten met Onzeker of een gebrek. Markeer een controlepunt om de vragen hier te zien.</string>
+    <string name="section_checkpoint_questions">Vragen per controlepunt (Italiaans)</string>
+    <string name="speak_all">Alles voorlezen</string>
 </resources>

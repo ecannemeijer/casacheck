@@ -263,6 +263,21 @@ class PdfReportGenerator(
             }
         }
 
+        if (t == ReportType.AGENT || t == ReportType.GEOMETRA || t == ReportType.FULL) {
+            val withQ = nl.ecannemeijer.casacheck.ui.detail.itemsNeedingQuestions(s.items)
+            if (withQ.isNotEmpty()) {
+                w.heading2(ctx.getString(R.string.section_checkpoint_questions))
+                val showLocal = ctx.resources.configuration.locales[0].language != "it"
+                for (item in withQ) {
+                    w.heading3(titleIn(ctx, item.templateCode, item.customTitle) + " – " + statusLabel(ctx, item.effectiveStatus))
+                    for (q in nl.ecannemeijer.casacheck.domain.checklist.CheckpointQuestions.forCode(item.templateCode)) {
+                        w.bullet(q.it)
+                        if (showLocal) w.small("   " + q.nl)
+                    }
+                }
+            }
+        }
+
         if (t == ReportType.FULL) {
             val todo = s.items.filter { it.effectiveStatus == CheckStatus.NOT_CHECKED }
             w.heading2(ctx.getString(R.string.section_todo))

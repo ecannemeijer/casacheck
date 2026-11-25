@@ -13,7 +13,7 @@ object TextListingParser {
     private val sqmPriceRx = Regex("([\\d.]+)\\s*€\\s*/\\s*m(²|2|q)", RegexOption.IGNORE_CASE)
     private val emailRx = Regex("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")
     private val phoneRx = Regex("(?:\\+39|\\+31|0039)?[\\s(]*0?\\d{2,4}[)\\s./-]*\\d{3,4}[\\s./-]*\\d{2,5}")
-    private val refRx = Regex("(?:rif\\.?|riferimento|codice annuncio|codice dell'annuncio|referentie|referentienummer|ref\\.?|reference)\\s*:?\\s*([A-Za-z0-9/_\\-. ()]{2,30})", RegexOption.IGNORE_CASE)
+    private val refRx = Regex("\\b(?:rif\\.?|riferimento|codice annuncio|codice dell'annuncio|referentie|referentienummer|ref\\.?|reference)(?![a-z])\\s*:?\\s*([A-Za-z0-9/_\\-. ()]{2,30})", RegexOption.IGNORE_CASE)
     private val energyRx = Regex("(?:classe energetica|classe|energielabel|energy (?:class|rating|label)|APE)\\s*:?\\s*\\b(A4|A3|A2|A1|A\\+{1,4}|[A-G])\\b", RegexOption.IGNORE_CASE)
     private val agentRx = Regex("(?:agenzia|makelaar|agency|agent|inserzionista)\\s*:?\\s*([^\\n]{3,60})", RegexOption.IGNORE_CASE)
 

@@ -129,4 +129,10 @@ class ParserTest {
         assertThat(d.energyLabel).isNull()
         assertThat(d.foundFields()).containsExactly("title")
     }
+
+    @Test fun wordStartingWithRifIsNotAReference() {
+        val d = TextListingParser.parse("Casa in pietra. Tetto rifatto nel 2015. Prezzo 120000 euro")
+        assertThat(d.referenceNumber).isNull()
+        assertThat(TextListingParser.parse("Rif. AB-12 Casa").referenceNumber).startsWith("AB-12")
+    }
 }

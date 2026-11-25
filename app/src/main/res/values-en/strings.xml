@@ -722,14 +722,14 @@
     <string name="show_original">Original</string>
     <string name="show_translation">Translation</string>
     <string name="translate_detecting">Detecting language…</string>
-    <string name="translate_downloading">Downloading translation model (once, about 30 MB)…</string>
+    <string name="translate_downloading">Downloading translation model (once, about 70 MB for Italian and Dutch)…</string>
     <string name="translate_running">Translating…</string>
-    <string name="translate_needs_wifi">The translation model must be downloaded once (about 30 MB). Connect to Wi-Fi, or turn off ‘Download translation model over Wi-Fi only’ in Settings.</string>
+    <string name="translate_needs_wifi">The translation model must be downloaded once (about 35 MB per language, about 70 MB in total). Connect to Wi-Fi, or turn off ‘Download translation model over Wi-Fi only’ in Settings.</string>
     <string name="translate_download_failed">The translation model could not be downloaded. Check the internet connection and try again.</string>
     <string name="translate_failed">Translation failed: %1$s</string>
     <string name="translate_already">This text is already in Dutch.</string>
     <string name="translate_note">Automatic on-device translation. Always check important details in the original text.</string>
     <string name="translation_settings">Translation</string>
     <string name="translate_wifi_only">Download translation model over Wi-Fi only</string>
-    <string name="translate_wifi_only_help">To translate listings into Dutch, a language model is downloaded once (about 30 MB per language). After that, translation works offline and the text stays on your device.</string>
+    <string name="translate_wifi_only_help">To translate listings into Dutch, a language model is downloaded once (about 35 MB per language; Italian and Dutch together about 70 MB). After that, translation works offline and the text stays on your device.</string>
 </resources>

@@ -723,14 +723,14 @@
     <string name="show_original">Origineel</string>
     <string name="show_translation">Vertaling</string>
     <string name="translate_detecting">Taal herkennen…</string>
-    <string name="translate_downloading">Vertaalmodel downloaden (eenmalig, ongeveer 30 MB)…</string>
+    <string name="translate_downloading">Vertaalmodel downloaden (eenmalig, ca. 70 MB voor Italiaans en Nederlands)…</string>
     <string name="translate_running">Vertalen…</string>
-    <string name="translate_needs_wifi">Het vertaalmodel moet eenmalig worden gedownload (ongeveer 30 MB). Maak verbinding met wifi, of zet ‘Vertaalmodel alleen via wifi downloaden’ uit in Instellingen.</string>
+    <string name="translate_needs_wifi">Het vertaalmodel moet eenmalig worden gedownload (ca. 35 MB per taal, ca. 70 MB in totaal). Maak verbinding met wifi, of zet ‘Vertaalmodel alleen via wifi downloaden’ uit in Instellingen.</string>
     <string name="translate_download_failed">Het vertaalmodel kon niet worden gedownload. Controleer de internetverbinding en probeer het opnieuw.</string>
     <string name="translate_failed">Vertalen is mislukt: %1$s</string>
     <string name="translate_already">Deze tekst is al in het Nederlands.</string>
     <string name="translate_note">Automatische vertaling op je toestel. Controleer belangrijke details altijd in de originele tekst.</string>
     <string name="translation_settings">Vertalen</string>
     <string name="translate_wifi_only">Vertaalmodel alleen via wifi downloaden</string>
-    <string name="translate_wifi_only_help">Voor het vertalen van advertenties naar het Nederlands wordt eenmalig een taalmodel gedownload (ongeveer 30 MB per taal). Daarna werkt vertalen offline en blijft de tekst op je toestel.</string>
+    <string name="translate_wifi_only_help">Voor het vertalen van advertenties naar het Nederlands wordt eenmalig een taalmodel gedownload (ca. 35 MB per taal; Italiaans en Nederlands samen ca. 70 MB). Daarna werkt vertalen offline en blijft de tekst op je toestel.</string>
 </resources>

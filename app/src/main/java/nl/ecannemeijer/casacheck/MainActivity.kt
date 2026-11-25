@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
             val settings by container.settings.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
             CasaTheme(settings.theme) {
                 CasaNavHost(container = container, shared = shared.value, onSharedConsumed = { shared.value = null })
+                nl.ecannemeijer.casacheck.ui.update.UpdateHost(container.updates)
             }
         }
     }

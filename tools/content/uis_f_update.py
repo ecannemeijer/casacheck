@@ -1,0 +1,17 @@
+S = [
+("update_title", "Updates", "Updates", "Aggiornamenti"),
+("update_check", "Controleren op updates", "Check for updates", "Controlla aggiornamenti"),
+("update_auto_note", "CasaCheck controleert automatisch op een nieuwe versie (hooguit elke 6 uur).", "CasaCheck checks automatically for a new version (at most every 6 hours).", "CasaCheck controlla automaticamente se c'è una nuova versione (al massimo ogni 6 ore)."),
+("update_available", "Nieuwe versie %1$s beschikbaar", "New version %1$s available", "Nuova versione %1$s disponibile"),
+("update_no_notes", "Geen release-notities.", "No release notes.", "Nessuna nota di rilascio."),
+("update_confirm_note", "Android vraagt je de installatie te bevestigen. Je gegevens blijven behouden.", "Android will ask you to confirm the installation. Your data is kept.", "Android ti chiederà di confermare l'installazione. I tuoi dati vengono conservati."),
+("update_now", "Bijwerken", "Update", "Aggiorna"),
+("update_downloading", "Update downloaden…", "Downloading update…", "Download dell'aggiornamento…"),
+("update_ready", "Update klaar om te installeren", "Update ready to install", "Aggiornamento pronto da installare"),
+("update_install", "Installeren", "Install", "Installa"),
+("update_up_to_date", "Je hebt de nieuwste versie.", "You have the latest version.", "Hai già la versione più recente."),
+("update_err_network", "Controleren of downloaden lukte niet. Controleer je internetverbinding en probeer het later opnieuw.", "Checking or downloading failed. Check your internet connection and try again later.", "Controllo o download non riuscito. Verifica la connessione e riprova più tardi."),
+("update_err_verify", "De gedownloade update is niet met dezelfde sleutel ondertekend en is daarom niet geïnstalleerd.", "The downloaded update is not signed with the same key and was therefore not installed.", "L'aggiornamento scaricato non è firmato con la stessa chiave e non è stato installato."),
+("update_err_permission", "Sta CasaCheck toe om apps te installeren (Onbekende apps installeren). Kom daarna terug naar CasaCheck; de installatie gaat dan verder.", "Allow CasaCheck to install apps (Install unknown apps). Then come back to CasaCheck to continue the installation.", "Consenti a CasaCheck di installare app (Installa app sconosciute). Poi torna a CasaCheck per continuare l'installazione."),
+("update_open_settings", "Instellingen openen", "Open settings", "Apri impostazioni"),
+]

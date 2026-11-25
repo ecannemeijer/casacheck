@@ -692,4 +692,19 @@
     <string name="wizard_done_text">Alle punten in deze ronde zijn doorlopen. Nog %1$d punten zonder status.</string>
     <string name="wizard_empty">Geen punten voor deze selectie.</string>
     <string name="wizard_progress">Punt %1$d van %2$d · %3$d gecontroleerd</string>
+    <string name="update_title">Updates</string>
+    <string name="update_check">Controleren op updates</string>
+    <string name="update_auto_note">CasaCheck controleert automatisch op een nieuwe versie (hooguit elke 6 uur).</string>
+    <string name="update_available">Nieuwe versie %1$s beschikbaar</string>
+    <string name="update_no_notes">Geen release-notities.</string>
+    <string name="update_confirm_note">Android vraagt je de installatie te bevestigen. Je gegevens blijven behouden.</string>
+    <string name="update_now">Bijwerken</string>
+    <string name="update_downloading">Update downloaden…</string>
+    <string name="update_ready">Update klaar om te installeren</string>
+    <string name="update_install">Installeren</string>
+    <string name="update_up_to_date">Je hebt de nieuwste versie.</string>
+    <string name="update_err_network">Controleren of downloaden lukte niet. Controleer je internetverbinding en probeer het later opnieuw.</string>
+    <string name="update_err_verify">De gedownloade update is niet met dezelfde sleutel ondertekend en is daarom niet geïnstalleerd.</string>
+    <string name="update_err_permission">Sta CasaCheck toe om apps te installeren (Onbekende apps installeren). Kom daarna terug naar CasaCheck; de installatie gaat dan verder.</string>
+    <string name="update_open_settings">Instellingen openen</string>
 </resources>

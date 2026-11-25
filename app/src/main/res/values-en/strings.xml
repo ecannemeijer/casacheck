@@ -691,4 +691,19 @@
     <string name="wizard_done_text">All points in this round have been visited. %1$d points still without status.</string>
     <string name="wizard_empty">No points for this selection.</string>
     <string name="wizard_progress">Point %1$d of %2$d · %3$d checked</string>
+    <string name="update_title">Updates</string>
+    <string name="update_check">Check for updates</string>
+    <string name="update_auto_note">CasaCheck checks automatically for a new version (at most every 6 hours).</string>
+    <string name="update_available">New version %1$s available</string>
+    <string name="update_no_notes">No release notes.</string>
+    <string name="update_confirm_note">Android will ask you to confirm the installation. Your data is kept.</string>
+    <string name="update_now">Update</string>
+    <string name="update_downloading">Downloading update…</string>
+    <string name="update_ready">Update ready to install</string>
+    <string name="update_install">Install</string>
+    <string name="update_up_to_date">You have the latest version.</string>
+    <string name="update_err_network">Checking or downloading failed. Check your internet connection and try again later.</string>
+    <string name="update_err_verify">The downloaded update is not signed with the same key and was therefore not installed.</string>
+    <string name="update_err_permission">Allow CasaCheck to install apps (Install unknown apps). Then come back to CasaCheck to continue the installation.</string>
+    <string name="update_open_settings">Open settings</string>
 </resources>

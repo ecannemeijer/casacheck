@@ -85,7 +85,7 @@
     <string name="copy_suffix"> (kopie)</string>
     <string name="select_for_compare">Selecteren om te vergelijken</string>
     <string name="delete_property_title">Woning verwijderen?</string>
-    <string name="delete_property_text">\"%1$s\" wordt met alle inspecties, foto\'s en documenten verwijderd. Dit kan niet ongedaan worden gemaakt. Maak eventueel eerst een back-up.</string>
+    <string name="delete_property_text">\"%1$s\" wordt verwijderd met alle inspecties, gebreken, metingen, kamers, foto\'s, documenten en rapporten. Direct daarna kun je dit nog even ongedaan maken.</string>
     <string name="favorite">Favoriet</string>
     <string name="plot_short">grond %1$s</string>
     <string name="inspection_progress">Inspectie %1$d%% klaar</string>
@@ -390,7 +390,7 @@
     <string name="delete_floor_text">Verdieping \"%1$s\" verwijderen? Ruimtes blijven bestaan zonder verdieping.</string>
     <string name="delete_measurement_text">Deze meting verwijderen?</string>
     <string name="delete_photo">Foto verwijderen</string>
-    <string name="delete_photo_text">De foto en eventuele annotatie worden definitief verwijderd.</string>
+    <string name="delete_photo_text">De foto wordt definitief verwijderd, ook bij gekoppelde controlepunten, gebreken en metingen, en komt niet meer in nieuwe rapporten.</string>
     <string name="delete_report">Rapport verwijderen</string>
     <string name="delete_room">Ruimte verwijderen</string>
     <string name="delete_room_text">Ruimte \"%1$s\" en de controlepunten ervan verwijderen? Foto\'s blijven bewaard.</string>
@@ -707,4 +707,9 @@
     <string name="update_err_verify">De gedownloade update is niet met dezelfde sleutel ondertekend en is daarom niet geïnstalleerd.</string>
     <string name="update_err_permission">Sta CasaCheck toe om apps te installeren (Onbekende apps installeren). Kom daarna terug naar CasaCheck; de installatie gaat dan verder.</string>
     <string name="update_open_settings">Instellingen openen</string>
+    <string name="property_deleted">\"%1$s\" verwijderd</string>
+    <string name="delete_property">Woning verwijderen</string>
+    <string name="delete_photos_title">Foto\'s verwijderen?</string>
+    <string name="delete_photos_text">%1$d foto\'s worden definitief verwijderd, ook bij gekoppelde controlepunten, gebreken en metingen.</string>
+    <string name="delete_selected">Verwijderen (%1$d)</string>
 </resources>

@@ -84,7 +84,7 @@
     <string name="copy_suffix"> (copia)</string>
     <string name="select_for_compare">Seleziona per confrontare</string>
     <string name="delete_property_title">Eliminare l\'immobile?</string>
-    <string name="delete_property_text">\"%1$s\" verrà eliminato con tutte le ispezioni, foto e documenti. Non si può annullare. Valuta prima un backup.</string>
+    <string name="delete_property_text">\"%1$s\" verrà eliminato con tutte le ispezioni, difetti, misurazioni, stanze, foto, documenti e report. Subito dopo puoi ancora annullare per qualche secondo.</string>
     <string name="favorite">Preferito</string>
     <string name="plot_short">terreno %1$s</string>
     <string name="inspection_progress">Ispezione al %1$d%%</string>
@@ -389,7 +389,7 @@
     <string name="delete_floor_text">Eliminare il piano \"%1$s\"? Le stanze restano senza piano.</string>
     <string name="delete_measurement_text">Eliminare questa misura?</string>
     <string name="delete_photo">Elimina foto</string>
-    <string name="delete_photo_text">La foto e l\'eventuale annotazione verranno eliminate definitivamente.</string>
+    <string name="delete_photo_text">La foto verrà eliminata definitivamente, anche dai punti di controllo, difetti e misurazioni collegati, e non comparirà più nei nuovi report.</string>
     <string name="delete_report">Elimina rapporto</string>
     <string name="delete_room">Elimina stanza</string>
     <string name="delete_room_text">Eliminare la stanza \"%1$s\" e i suoi punti di controllo? Le foto restano.</string>
@@ -706,4 +706,9 @@
     <string name="update_err_verify">L\'aggiornamento scaricato non è firmato con la stessa chiave e non è stato installato.</string>
     <string name="update_err_permission">Consenti a CasaCheck di installare app (Installa app sconosciute). Poi torna a CasaCheck per continuare l\'installazione.</string>
     <string name="update_open_settings">Apri impostazioni</string>
+    <string name="property_deleted">\"%1$s\" eliminato</string>
+    <string name="delete_property">Elimina immobile</string>
+    <string name="delete_photos_title">Eliminare le foto?</string>
+    <string name="delete_photos_text">%1$d foto verranno eliminate definitivamente, anche dai punti di controllo, difetti e misurazioni collegati.</string>
+    <string name="delete_selected">Elimina (%1$d)</string>
 </resources>

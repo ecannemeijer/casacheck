@@ -2,7 +2,14 @@ package nl.ecannemeijer.casacheck.data.repo
 
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
+import nl.ecannemeijer.casacheck.data.files.FileCleanup
 import nl.ecannemeijer.casacheck.data.db.CasaDatabase
 import nl.ecannemeijer.casacheck.data.db.Floor
 import nl.ecannemeijer.casacheck.data.db.ImportHistory
@@ -43,12 +50,20 @@ class PropertyRepository(
     fun observeFeatures(id: Long) = db.featureDao().observe(id)
     fun observeListing(id: Long) = db.listingDao().observe(id)
     fun observePrices(id: Long) = db.listingDao().observePrices(id)
-    fun observeLastOpened() = dao.observeLastOpened()
+    fun observeLastOpened(): Flow<Property?> = combine(dao.observeLastOpened(), pending) { p, hidden -> p?.takeIf { it.id !in hidden } }
+
+    /** Properties the user just deleted; hidden everywhere while the "undo" snackbar is shown, then deleted for real. */
+    private val pending = MutableStateFlow<Set<Long>>(emptySet())
+    val pendingDelete: StateFlow<Set<Long>> = pending.asStateFlow()
+    fun hide(id: Long) = pending.update { it + id }
+    fun unhide(id: Long) = pending.update { it - id }
     suspend fun get(id: Long) = dao.get(id)
     suspend fun all() = dao.all()
 
     /** All property cards with progress, defect counts and cost totals (one combined flow, no N+1 queries). */
-    fun observeCards(): Flow<List<PropertyCard>> = combine(
+    fun observeCards(): Flow<List<PropertyCard>> = combine(observeAllCards(), pending) { cards, hidden -> if (hidden.isEmpty()) cards else cards.filter { it.property.id !in hidden } }
+
+    private fun observeAllCards(): Flow<List<PropertyCard>> = combine(
         dao.observeEverything(), dao.observeStats(), db.defectDao().observeAll(), db.defectDao().observeAllProjects(),
         combine(db.defectDao().observeAllCosts(), settings.settings, photosFlow()) { c, s, p -> Triple(c, s, p) },
     ) { props, stats, defects, projects, (costs, s, photos) ->
@@ -111,15 +126,26 @@ class PropertyRepository(
     suspend fun setMainPhoto(id: Long, photoId: Long?) = dao.setMainPhoto(id, photoId)
     suspend fun touch(id: Long) = dao.touchOpened(id)
 
-    /** Deletes one property; foreign keys cascade only to its own rows. Its files are removed afterwards. */
-    suspend fun delete(id: Long) {
-        val p = dao.get(id) ?: return
-        val photos = db.photoDao().list(id)
-        val docs = db.documentDao().files(id)
-        dao.delete(id)
-        photos.forEach { files.delete(it.filePath); files.delete(it.thumbPath); files.delete(it.editedPath) }
-        docs.forEach { files.delete(it.filePath) }
-        listOf("photos", "thumbs", "docs", "edited").forEach { java.io.File(files.root, "$it/${p.uuid}").deleteRecursively() }
+    /**
+     * Deletes one property for good. Foreign keys (ON DELETE CASCADE) remove all its rows: features, listing, prices, floors,
+     * rooms, checklist items and results, sessions, defects, repair projects, costs, moisture/crack measurements, documents,
+     * photos (+ links/annotations), agent answers, appointments, environment ratings, distances and report rows.
+     * Afterwards its files are removed from disk: the per-property photo/thumb/doc/edited folders and the generated PDFs.
+     * Returns the number of files/folders removed.
+     */
+    suspend fun delete(id: Long): Int = withContext(Dispatchers.IO) {
+        val p = dao.get(id) ?: run { unhide(id); return@withContext 0 }
+        val plan = db.withTransaction {
+            val photos = db.photoDao().list(id)
+            val docs = db.documentDao().files(id)
+            val reports = db.reportDao().forProperty(id)
+            dao.delete(id)
+            FileCleanup.planForProperty(p.uuid,
+                photos.flatMap { listOf(it.filePath, it.thumbPath, it.editedPath) } + docs.map { it.filePath } + reports.map { it.filePath })
+        }
+        val removed = FileCleanup.execute(files.root, plan)
+        unhide(id)
+        removed
     }
 
     /** Copies the base data, features, floors and rooms; the checklist is generated fresh (results are not copied). */

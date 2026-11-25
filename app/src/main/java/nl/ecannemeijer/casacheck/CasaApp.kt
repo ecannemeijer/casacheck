@@ -54,6 +54,11 @@ class AppContainer(context: Context, dbName: String? = CasaDatabase.NAME) {
     val reports = PdfReportGenerator(appContext, db, files, snapshots, inspections, settings)
     /** Scope for work that must outlive a screen (e.g. deleting after navigating away). */
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    /** Delete a property with an undo window; also stops a running listing-photo download for it. */
+    val deletion = nl.ecannemeijer.casacheck.data.repo.PropertyDeletion(scope, properties::hide, properties::unhide, { id ->
+        runCatching { androidx.work.WorkManager.getInstance(appContext).cancelUniqueWork(nl.ecannemeijer.casacheck.data.importer.PhotoDownloadWorker.uniqueName(id)) }
+        properties.delete(id)
+    })
 }
 
 class CasaApp : Application() {

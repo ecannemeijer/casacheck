@@ -65,7 +65,7 @@ class FileStore(private val context: Context) {
         } ?: throw IOException("cannot open")
     }
 
-    fun delete(rel: String?) { resolve(rel)?.takeIf { it.exists() && it.absolutePath.startsWith(root.absolutePath) }?.delete() }
+    fun delete(rel: String?) { FileCleanup.deleteFile(root, rel) }
 
     fun writeThumbnail(src: File, dst: File, maxSide: Int = 480) {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }

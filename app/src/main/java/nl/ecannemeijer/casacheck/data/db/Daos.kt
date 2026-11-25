@@ -258,6 +258,7 @@ interface PhotoDao {
     @Insert suspend fun insert(p: Photo): Long
     @Update suspend fun update(p: Photo)
     @Query("DELETE FROM photo WHERE id = :id") suspend fun delete(id: Long)
+    @Query("SELECT COUNT(*) FROM photo WHERE filePath = :path OR thumbPath = :path OR editedPath = :path") suspend fun countUsingFile(path: String): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE) suspend fun link(l: PhotoInspectionLink)
     @Query("DELETE FROM photo_inspection_link WHERE photoId = :photoId AND itemId = :itemId") suspend fun unlink(photoId: Long, itemId: Long)
@@ -338,4 +339,5 @@ interface ReportDao {
     @Query("SELECT * FROM report ORDER BY createdAt DESC") fun observeAll(): Flow<List<Report>>
     @Insert suspend fun insert(r: Report): Long
     @Query("DELETE FROM report WHERE id = :id") suspend fun delete(id: Long)
+    @Query("SELECT * FROM report WHERE propertyId = :pid") suspend fun forProperty(pid: Long): List<Report>
 }

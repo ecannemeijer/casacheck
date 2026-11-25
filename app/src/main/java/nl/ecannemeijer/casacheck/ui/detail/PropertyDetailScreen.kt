@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -17,6 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -26,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nl.ecannemeijer.casacheck.AppContainer
 import nl.ecannemeijer.casacheck.R
 import nl.ecannemeijer.casacheck.ui.common.BackTopBar
+import nl.ecannemeijer.casacheck.ui.common.ConfirmDialog
 import nl.ecannemeijer.casacheck.ui.common.vm
 import nl.ecannemeijer.casacheck.ui.nav.Nav
 import nl.ecannemeijer.casacheck.ui.reports.ReportsPanel
@@ -42,6 +46,11 @@ fun PropertyDetailScreen(c: AppContainer, nav: Nav, id: Long, tab: Int) {
     val vm = vm("detail$id") { DetailVm(c, id) }
     val p by vm.property.collectAsStateWithLifecycle()
     var sel by rememberSaveable { mutableIntStateOf(tab.coerceIn(0, DETAIL_TABS.lastIndex)) }
+    var confirmDelete by remember { mutableStateOf(false) }
+    p?.let { pp ->
+        if (confirmDelete) ConfirmDialog(stringResource(R.string.delete_property_title), stringResource(R.string.delete_property_text, pp.title.ifBlank { stringResource(R.string.untitled_property) }),
+            stringResource(R.string.delete), onConfirm = { c.deletion.request(id, pp.title); nav.leaveProperty() }, onDismiss = { confirmDelete = false })
+    }
     Scaffold(topBar = {
         BackTopBar(p?.title?.ifBlank { null } ?: stringResource(R.string.untitled_property), nav::back) {
             p?.let { pp ->
@@ -49,6 +58,7 @@ fun PropertyDetailScreen(c: AppContainer, nav: Nav, id: Long, tab: Int) {
                     Icon(if (pp.favorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder, stringResource(R.string.favorite), tint = MaterialTheme.colorScheme.secondary)
                 }
                 IconButton(onClick = { nav.edit(id) }) { Icon(Icons.Filled.Edit, stringResource(R.string.edit)) }
+                IconButton(onClick = { confirmDelete = true }) { Icon(Icons.Filled.Delete, stringResource(R.string.delete_property)) }
             }
         }
     }) { pad ->

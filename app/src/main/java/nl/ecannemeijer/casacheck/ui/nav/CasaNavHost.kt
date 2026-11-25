@@ -59,6 +59,13 @@ data class CameraTarget(val propertyId: Long, val itemId: Long? = null, val room
 
 class Nav(private val c: NavHostController) {
     fun back() { c.popBackStack() }
+    /** After deleting a property: pop every screen that belongs to it (detail, edit, wizard, photos, ...). */
+    fun leaveProperty() {
+        val inner = setOf("property", "edit", "wizard", "item", "camera", "photo", "annotate", "photocompare", "room", "defect", "moisture", "crack", "agent")
+        while (c.previousBackStackEntry != null && c.currentDestination?.route?.substringBefore('/')?.substringBefore('?') in inner) {
+            if (!c.popBackStack()) break
+        }
+    }
     fun tab(route: String) = c.navigate(route) { popUpTo(c.graph.findStartDestination().id) { saveState = true }; launchSingleTop = true; restoreState = true }
     fun add() = c.navigate("add")
     fun property(id: Long, tab: Int = 0) = c.navigate("property/$id?tab=$tab") { launchSingleTop = true }

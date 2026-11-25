@@ -122,7 +122,7 @@ class PropertyListVm(private val c: AppContainer) : BaseVm() {
 
     fun favorite(id: Long, f: Boolean) = launch { c.properties.setFavorite(id, f) }
     fun archive(id: Long, a: Boolean) = launch { c.properties.setArchived(id, a) }
-    fun delete(id: Long) = launch { c.properties.delete(id) }
+    fun delete(card: PropertyCard) = c.deletion.request(card.property.id, card.property.title)
     fun duplicate(id: Long, suffix: String) = launch { c.properties.duplicate(id, suffix) }
 }
 
@@ -185,7 +185,7 @@ fun PropertyListScreen(c: AppContainer, nav: Nav) {
     }
     confirmDelete?.let { card ->
         ConfirmDialog(stringResource(R.string.delete_property_title), stringResource(R.string.delete_property_text, card.property.title), stringResource(R.string.delete),
-            onConfirm = { vm.delete(card.property.id) }, onDismiss = { confirmDelete = null })
+            onConfirm = { selected = selected - card.property.id; vm.delete(card) }, onDismiss = { confirmDelete = null })
     }
 }
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,7 +32,6 @@ import nl.ecannemeijer.casacheck.ui.common.SectionCard
 import nl.ecannemeijer.casacheck.ui.common.TriStateRow
 import nl.ecannemeijer.casacheck.ui.common.vm
 import nl.ecannemeijer.casacheck.ui.nav.Nav
-import kotlinx.coroutines.launch
 
 @Composable
 fun EditPropertyScreen(c: AppContainer, nav: Nav, id: Long) {
@@ -47,10 +47,13 @@ fun EditPropertyScreen(c: AppContainer, nav: Nav, id: Long) {
             SectionCard(stringResource(R.string.extra_features)) {
                 FeatureKeys.BOOL_KEYS.forEach { k -> TriStateRow(stringResource(Labels.feature(k)), f[k]?.toBooleanStrictOrNull()) { vm.setFeature(k, it) } }
             }
-            OutlinedButton(onClick = { confirmDelete = true }, Modifier.fillMaxWidth()) { Text(stringResource(R.string.delete_property_title)) }
+            OutlinedButton(onClick = { confirmDelete = true }, Modifier.fillMaxWidth(),
+                colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.material3.MaterialTheme.colorScheme.error)) {
+                androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Filled.Delete, null); Text(" " + stringResource(R.string.delete_property))
+            }
         }
     }
     if (confirmDelete && p != null) ConfirmDialog(stringResource(R.string.delete_property_title), stringResource(R.string.delete_property_text, p.title), stringResource(R.string.delete),
-        onConfirm = { c.scope.launch { c.properties.delete(id) }; nav.tab("properties") }, onDismiss = { confirmDelete = false })
+        onConfirm = { c.deletion.request(id, p.title); nav.leaveProperty() }, onDismiss = { confirmDelete = false })
 }
 

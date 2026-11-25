@@ -119,7 +119,7 @@ S = [
 ("delete_floor_text", "Verdieping \"%1$s\" verwijderen? Ruimtes blijven bestaan zonder verdieping.", "Delete floor \"%1$s\"? Rooms remain without a floor.", "Eliminare il piano \"%1$s\"? Le stanze restano senza piano."),
 ("delete_measurement_text", "Deze meting verwijderen?", "Delete this measurement?", "Eliminare questa misura?"),
 ("delete_photo", "Foto verwijderen", "Delete photo", "Elimina foto"),
-("delete_photo_text", "De foto en eventuele annotatie worden definitief verwijderd.", "The photo and any annotation will be deleted permanently.", "La foto e l'eventuale annotazione verranno eliminate definitivamente."),
+("delete_photo_text", "De foto wordt definitief verwijderd, ook bij gekoppelde controlepunten, gebreken en metingen, en komt niet meer in nieuwe rapporten.", "The photo will be deleted permanently, including from linked checkpoints, defects and measurements, and will no longer appear in new reports.", "La foto verrà eliminata definitivamente, anche dai punti di controllo, difetti e misurazioni collegati, e non comparirà più nei nuovi report."),
 ("delete_report", "Rapport verwijderen", "Delete report", "Elimina rapporto"),
 ("delete_room", "Ruimte verwijderen", "Delete room", "Elimina stanza"),
 ("delete_room_text", "Ruimte \"%1$s\" en de controlepunten ervan verwijderen? Foto's blijven bewaard.", "Delete room \"%1$s\" and its checkpoints? Photos are kept.", "Eliminare la stanza \"%1$s\" e i suoi punti di controllo? Le foto restano."),

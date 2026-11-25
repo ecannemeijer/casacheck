@@ -84,7 +84,7 @@
     <string name="copy_suffix"> (copy)</string>
     <string name="select_for_compare">Select to compare</string>
     <string name="delete_property_title">Delete property?</string>
-    <string name="delete_property_text">\"%1$s\" will be deleted with all inspections, photos and documents. This cannot be undone. Consider making a backup first.</string>
+    <string name="delete_property_text">\"%1$s\" will be deleted with all inspections, defects, measurements, rooms, photos, documents and reports. You can undo this for a few seconds afterwards.</string>
     <string name="favorite">Favourite</string>
     <string name="plot_short">plot %1$s</string>
     <string name="inspection_progress">Inspection %1$d%% done</string>
@@ -389,7 +389,7 @@
     <string name="delete_floor_text">Delete floor \"%1$s\"? Rooms remain without a floor.</string>
     <string name="delete_measurement_text">Delete this measurement?</string>
     <string name="delete_photo">Delete photo</string>
-    <string name="delete_photo_text">The photo and any annotation will be deleted permanently.</string>
+    <string name="delete_photo_text">The photo will be deleted permanently, including from linked checkpoints, defects and measurements, and will no longer appear in new reports.</string>
     <string name="delete_report">Delete report</string>
     <string name="delete_room">Delete room</string>
     <string name="delete_room_text">Delete room \"%1$s\" and its checkpoints? Photos are kept.</string>
@@ -706,4 +706,9 @@
     <string name="update_err_verify">The downloaded update is not signed with the same key and was therefore not installed.</string>
     <string name="update_err_permission">Allow CasaCheck to install apps (Install unknown apps). Then come back to CasaCheck to continue the installation.</string>
     <string name="update_open_settings">Open settings</string>
+    <string name="property_deleted">\"%1$s\" deleted</string>
+    <string name="delete_property">Delete property</string>
+    <string name="delete_photos_title">Delete photos?</string>
+    <string name="delete_photos_text">%1$d photos will be deleted permanently, including from linked checkpoints, defects and measurements.</string>
+    <string name="delete_selected">Delete (%1$d)</string>
 </resources>

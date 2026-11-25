@@ -41,7 +41,7 @@ S = [
 ("copy_suffix", " (kopie)", " (copy)", " (copia)"),
 ("select_for_compare", "Selecteren om te vergelijken", "Select to compare", "Seleziona per confrontare"),
 ("delete_property_title", "Woning verwijderen?", "Delete property?", "Eliminare l'immobile?"),
-("delete_property_text", "\"%1$s\" wordt met alle inspecties, foto's en documenten verwijderd. Dit kan niet ongedaan worden gemaakt. Maak eventueel eerst een back-up.", "\"%1$s\" will be deleted with all inspections, photos and documents. This cannot be undone. Consider making a backup first.", "\"%1$s\" verrà eliminato con tutte le ispezioni, foto e documenti. Non si può annullare. Valuta prima un backup."),
+("delete_property_text", "\"%1$s\" wordt verwijderd met alle inspecties, gebreken, metingen, kamers, foto's, documenten en rapporten. Direct daarna kun je dit nog even ongedaan maken.", "\"%1$s\" will be deleted with all inspections, defects, measurements, rooms, photos, documents and reports. You can undo this for a few seconds afterwards.", "\"%1$s\" verrà eliminato con tutte le ispezioni, difetti, misurazioni, stanze, foto, documenti e report. Subito dopo puoi ancora annullare per qualche secondo."),
 ("favorite", "Favoriet", "Favourite", "Preferito"),
 ("plot_short", "grond %1$s", "plot %1$s", "terreno %1$s"),
 ("inspection_progress", "Inspectie %1$d%% klaar", "Inspection %1$d%% done", "Ispezione al %1$d%%"),

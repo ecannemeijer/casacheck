@@ -11,6 +11,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -42,6 +46,13 @@ import nl.ecannemeijer.casacheck.ui.common.Intents
 import nl.ecannemeijer.casacheck.ui.common.LabeledValue
 import nl.ecannemeijer.casacheck.ui.common.SectionCard
 import nl.ecannemeijer.casacheck.ui.common.WarningCard
+import nl.ecannemeijer.casacheck.ui.common.TranslateBusy
+import nl.ecannemeijer.casacheck.ui.common.TranslateButton
+import nl.ecannemeijer.casacheck.ui.common.TranslateProblem
+import nl.ecannemeijer.casacheck.ui.common.TranslateTextBlock
+import nl.ecannemeijer.casacheck.data.translate.TranslateResult
+import nl.ecannemeijer.casacheck.data.translate.TranslateStage
+import nl.ecannemeijer.casacheck.data.translate.TranslationText
 import nl.ecannemeijer.casacheck.ui.nav.Nav
 import java.text.DateFormat
 import java.util.Date
@@ -65,6 +76,10 @@ fun ListingTab(vm: DetailVm, nav: Nav) {
     var ui by remember { mutableStateOf<RefreshUi>(RefreshUi.Idle) }
     var pasteMode by remember { mutableStateOf(false) }
     var pasted by remember { mutableStateOf("") }
+    val translations by remember(p.id) { vm.c.translations.observe(p.id) }.collectAsState(emptyList())
+    var showTr by rememberSaveable(p.id) { mutableStateOf(true) }
+    var trStage by remember { mutableStateOf<TranslateStage?>(null) }
+    var trProblem by remember { mutableStateOf<TranslateResult?>(null) }
     val df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
 
     suspend fun apply(d: ListingData) {
@@ -106,6 +121,7 @@ fun ListingTab(vm: DetailVm, nav: Nav) {
             if (pasteMode) {
                 OutlinedTextField(pasted, { pasted = it }, Modifier.fillMaxWidth(), minLines = 5, label = { Text(stringResource(R.string.listing_text)) })
                 Button(enabled = pasted.isNotBlank(), onClick = { scope.launch { apply(vm.c.textImport.import(pasted)); pasteMode = false; pasted = "" } }) { Text(stringResource(R.string.analyse_text)) }
+                TranslateTextBlock(vm.c, pasted)
             }
             InfoNote(stringResource(R.string.refresh_note))
         }
@@ -127,7 +143,35 @@ fun ListingTab(vm: DetailVm, nav: Nav) {
                 }
             }
         }
-        SectionCard(stringResource(R.string.f_description)) { Text(p.description ?: "–", style = MaterialTheme.typography.bodyMedium) }
+        SectionCard(stringResource(R.string.f_description)) {
+            val desc = p.description.orEmpty()
+            val descHash = remember(desc) { TranslationText.hash(desc) }
+            val titleHash = remember(p.title) { TranslationText.hash(p.title) }
+            val descTr = translations.firstOrNull { it.field == "description" && it.sourceHash == descHash }
+            val titleTr = translations.firstOrNull { it.field == "title" && it.sourceHash == titleHash }
+            if (descTr != null) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(!showTr, { showTr = false }, { Text(stringResource(R.string.show_original)) })
+                FilterChip(showTr, { showTr = true }, { Text(stringResource(R.string.show_translation)) })
+            }
+            if (descTr != null && showTr) {
+                titleTr?.let { Text(it.text, style = MaterialTheme.typography.titleMedium) }
+                SelectionContainer { Text(descTr.text, style = MaterialTheme.typography.bodyMedium) }
+                Text(stringResource(R.string.translate_note), style = MaterialTheme.typography.bodySmall)
+            } else SelectionContainer { Text(p.description ?: "–", style = MaterialTheme.typography.bodyMedium) }
+            if (desc.isNotBlank() && descTr == null) {
+                val st = trStage
+                if (st != null) TranslateBusy(st) else TranslateButton(onClick = {
+                    trProblem = null
+                    scope.launch {
+                        try {
+                            val r = vm.c.translations.translateField(p.id, "description", desc) { s -> trStage = s }
+                            if (r is TranslateResult.Ok) { if (p.title.isNotBlank()) vm.c.translations.translateField(p.id, "title", p.title); showTr = true } else trProblem = r
+                        } finally { trStage = null }
+                    }
+                })
+            }
+            trProblem?.let { TranslateProblem(it) }
+        }
     }
 
     (ui as? RefreshUi.Done)?.let { d ->

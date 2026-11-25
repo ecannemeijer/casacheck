@@ -1,0 +1,16 @@
+S = [
+("translate_to_nl", "Vertalen naar Nederlands", "Translate to Dutch", "Traduci in olandese"),
+("show_original", "Origineel", "Original", "Originale"),
+("show_translation", "Vertaling", "Translation", "Traduzione"),
+("translate_detecting", "Taal herkennen…", "Detecting language…", "Riconoscimento lingua…"),
+("translate_downloading", "Vertaalmodel downloaden (eenmalig, ongeveer 30 MB)…", "Downloading translation model (once, about 30 MB)…", "Download del modello di traduzione (una volta, circa 30 MB)…"),
+("translate_running", "Vertalen…", "Translating…", "Traduzione in corso…"),
+("translate_needs_wifi", "Het vertaalmodel moet eenmalig worden gedownload (ongeveer 30 MB). Maak verbinding met wifi, of zet ‘Vertaalmodel alleen via wifi downloaden’ uit in Instellingen.", "The translation model must be downloaded once (about 30 MB). Connect to Wi-Fi, or turn off ‘Download translation model over Wi-Fi only’ in Settings.", "Il modello di traduzione va scaricato una volta (circa 30 MB). Connettiti al Wi-Fi o disattiva ‘Scarica il modello solo via Wi-Fi’ nelle Impostazioni."),
+("translate_download_failed", "Het vertaalmodel kon niet worden gedownload. Controleer de internetverbinding en probeer het opnieuw.", "The translation model could not be downloaded. Check the internet connection and try again.", "Impossibile scaricare il modello di traduzione. Controlla la connessione internet e riprova."),
+("translate_failed", "Vertalen is mislukt: %1$s", "Translation failed: %1$s", "Traduzione non riuscita: %1$s"),
+("translate_already", "Deze tekst is al in het Nederlands.", "This text is already in Dutch.", "Questo testo è già in olandese."),
+("translate_note", "Automatische vertaling op je toestel. Controleer belangrijke details altijd in de originele tekst.", "Automatic on-device translation. Always check important details in the original text.", "Traduzione automatica sul dispositivo. Verifica sempre i dettagli importanti nel testo originale."),
+("translation_settings", "Vertalen", "Translation", "Traduzione"),
+("translate_wifi_only", "Vertaalmodel alleen via wifi downloaden", "Download translation model over Wi-Fi only", "Scarica il modello solo via Wi-Fi"),
+("translate_wifi_only_help", "Voor het vertalen van advertenties naar het Nederlands wordt eenmalig een taalmodel gedownload (ongeveer 30 MB per taal). Daarna werkt vertalen offline en blijft de tekst op je toestel.", "To translate listings into Dutch, a language model is downloaded once (about 30 MB per language). After that, translation works offline and the text stays on your device.", "Per tradurre gli annunci in olandese viene scaricato una volta un modello linguistico (circa 30 MB per lingua). Dopo funziona offline e il testo resta sul dispositivo."),
+]

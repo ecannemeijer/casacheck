@@ -20,5 +20,18 @@ object Migrations {
         }
     }
 
-    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2)
+    /** v3: cached on-device translations of listing texts. */
+    val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `translation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `propertyId` INTEGER NOT NULL, " +
+                    "`field` TEXT NOT NULL, `sourceHash` TEXT NOT NULL, `sourceLang` TEXT NOT NULL, `targetLang` TEXT NOT NULL, `text` TEXT NOT NULL, " +
+                    "`createdAt` INTEGER NOT NULL, FOREIGN KEY(`propertyId`) REFERENCES `property`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_translation_propertyId` ON `translation` (`propertyId`)")
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_translation_propertyId_field_targetLang` ON `translation` (`propertyId`, `field`, `targetLang`)")
+        }
+    }
+
+    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2, MIGRATION_2_3)
 }

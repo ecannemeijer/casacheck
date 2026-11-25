@@ -120,6 +120,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.jsoup)
     implementation(libs.mlkit.text)
+    implementation(libs.mlkit.translate)
+    implementation(libs.mlkit.language.id)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
 

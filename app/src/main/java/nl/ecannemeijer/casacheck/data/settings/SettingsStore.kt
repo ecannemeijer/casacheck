@@ -30,6 +30,8 @@ data class AppSettings(
     val listingPhotosInReports: Boolean = false,
     val moistureHeights: String = "10,50,100,150,200",
     val onboardingDone: Boolean = false,
+    /** Download the ML Kit translation model (~30 MB) only over Wi-Fi. */
+    val translateWifiOnly: Boolean = false,
 ) {
     fun weightMap(): Map<ScoreGroup, Int> = ScoreGroup.entries.associateWith { weights[it.name] ?: ScoreCalculator.DEFAULT_WEIGHTS[it] ?: 0 }
 }
@@ -44,6 +46,7 @@ class SettingsStore(private val context: Context) {
         val listingPhotos = booleanPreferencesKey("listing_photos_in_reports")
         val heights = stringPreferencesKey("moisture_heights")
         val onboarding = booleanPreferencesKey("onboarding_done")
+        val translateWifi = booleanPreferencesKey("translate_wifi_only")
         fun weight(g: ScoreGroup) = intPreferencesKey("weight_${g.name}")
     }
 
@@ -56,6 +59,7 @@ class SettingsStore(private val context: Context) {
             listingPhotosInReports = p[K.listingPhotos] ?: false,
             moistureHeights = p[K.heights] ?: "10,50,100,150,200",
             onboardingDone = p[K.onboarding] ?: false,
+            translateWifiOnly = p[K.translateWifi] ?: false,
         )
     }
 
@@ -70,6 +74,7 @@ class SettingsStore(private val context: Context) {
             p[K.listingPhotos] = n.listingPhotosInReports
             p[K.heights] = n.moistureHeights
             p[K.onboarding] = n.onboardingDone
+            p[K.translateWifi] = n.translateWifiOnly
             ScoreGroup.entries.forEach { g -> p[K.weight(g)] = n.weights[g.name] ?: 0 }
         }
     }

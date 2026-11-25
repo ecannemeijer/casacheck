@@ -718,4 +718,18 @@
     <string name="cp_questions_none">Nessun punto di controllo segnato come Incerto o difetto. Segna un punto per vedere qui le domande.</string>
     <string name="section_checkpoint_questions">Domande per punto di controllo</string>
     <string name="speak_all">Leggi tutto</string>
+    <string name="translate_to_nl">Traduci in olandese</string>
+    <string name="show_original">Originale</string>
+    <string name="show_translation">Traduzione</string>
+    <string name="translate_detecting">Riconoscimento lingua…</string>
+    <string name="translate_downloading">Download del modello di traduzione (una volta, circa 30 MB)…</string>
+    <string name="translate_running">Traduzione in corso…</string>
+    <string name="translate_needs_wifi">Il modello di traduzione va scaricato una volta (circa 30 MB). Connettiti al Wi-Fi o disattiva ‘Scarica il modello solo via Wi-Fi’ nelle Impostazioni.</string>
+    <string name="translate_download_failed">Impossibile scaricare il modello di traduzione. Controlla la connessione internet e riprova.</string>
+    <string name="translate_failed">Traduzione non riuscita: %1$s</string>
+    <string name="translate_already">Questo testo è già in olandese.</string>
+    <string name="translate_note">Traduzione automatica sul dispositivo. Verifica sempre i dettagli importanti nel testo originale.</string>
+    <string name="translation_settings">Traduzione</string>
+    <string name="translate_wifi_only">Scarica il modello solo via Wi-Fi</string>
+    <string name="translate_wifi_only_help">Per tradurre gli annunci in olandese viene scaricato una volta un modello linguistico (circa 30 MB per lingua). Dopo funziona offline e il testo resta sul dispositivo.</string>
 </resources>

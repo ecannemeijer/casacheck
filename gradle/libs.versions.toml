@@ -16,6 +16,8 @@ coil = "2.7.0"
 okhttp = "4.12.0"
 jsoup = "1.18.3"
 mlkitText = "16.0.1"
+mlkitTranslate = "17.0.3"
+mlkitLangId = "17.0.6"
 serialization = "1.7.3"
 coroutines = "1.9.0"
 junit = "4.13.2"
@@ -60,6 +62,8 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 mlkit-text = { module = "com.google.mlkit:text-recognition", version.ref = "mlkitText" }
+mlkit-translate = { module = "com.google.mlkit:translate", version.ref = "mlkitTranslate" }
+mlkit-language-id = { module = "com.google.mlkit:language-id", version.ref = "mlkitLangId" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }

@@ -17,7 +17,7 @@ import androidx.room.TypeConverters
         Document::class, DocumentFile::class, Photo::class, PropertyPhoto::class, PhotoAnnotation::class,
         PhotoInspectionLink::class, AgentQuestion::class, AgentAnswer::class, PropertyPreference::class,
         Appointment::class, ImportHistory::class, EnvironmentRating::class, Destination::class,
-        DestinationDistance::class, Report::class,
+        DestinationDistance::class, Report::class, Translation::class,
     ]
 )
 @TypeConverters(Converters::class)
@@ -36,9 +36,10 @@ abstract class CasaDatabase : RoomDatabase() {
     abstract fun appointmentDao(): AppointmentDao
     abstract fun environmentDao(): EnvironmentDao
     abstract fun reportDao(): ReportDao
+    abstract fun translationDao(): TranslationDao
 
     companion object {
-        const val VERSION = 2
+        const val VERSION = 3
         const val NAME = "casacheck.db"
 
         fun build(context: Context, name: String? = NAME): CasaDatabase {

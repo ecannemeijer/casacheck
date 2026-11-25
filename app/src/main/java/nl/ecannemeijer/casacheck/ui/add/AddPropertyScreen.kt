@@ -79,6 +79,7 @@ import nl.ecannemeijer.casacheck.ui.common.InfoNote
 import nl.ecannemeijer.casacheck.ui.common.PropertyForm
 import nl.ecannemeijer.casacheck.ui.common.SectionCard
 import nl.ecannemeijer.casacheck.ui.common.WarningCard
+import nl.ecannemeijer.casacheck.ui.common.TranslateTextBlock
 import nl.ecannemeijer.casacheck.ui.common.vm
 import nl.ecannemeijer.casacheck.ui.nav.Nav
 import java.io.File
@@ -279,6 +280,7 @@ fun AddPropertyScreen(c: AppContainer, nav: Nav, shared: SharedPayload?, onShare
                     Text(stringResource(R.string.paste_text_explain), style = MaterialTheme.typography.bodyMedium)
                     OutlinedTextField(text, { vm.text.value = it }, Modifier.fillMaxWidth(), minLines = 8, label = { Text(stringResource(R.string.listing_text)) })
                     Button(onClick = vm::parseText, enabled = text.isNotBlank(), modifier = Modifier.fillMaxWidth().height(52.dp)) { Text(stringResource(R.string.analyse_text)) }
+                    TranslateTextBlock(c, text)
                 }
                 AddMode.SCREENSHOT -> SectionCard(stringResource(R.string.mode_screenshot)) {
                     Text(stringResource(R.string.screenshot_explain), style = MaterialTheme.typography.bodyMedium)
@@ -326,6 +328,7 @@ private fun PreviewSection(c: AppContainer, vm: AddPropertyVm, s: AddState.Previ
         var t by androidx.compose.runtime.remember { mutableStateOf(ocr ?: "") }
         OutlinedTextField(t, { t = it }, Modifier.fillMaxWidth(), minLines = 4, maxLines = 10)
         OutlinedButton(onClick = { vm.reparseOcr(t) }) { Text(stringResource(R.string.analyse_again)) }
+        TranslateTextBlock(c, t)
         Row(verticalAlignment = Alignment.CenterVertically) { Checkbox(keep, { vm.keepScreenshots.value = it }); Text(stringResource(R.string.keep_screenshots)) }
     }
     val photos = s.data?.photos.orEmpty()

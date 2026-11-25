@@ -156,6 +156,10 @@ fun SettingsScreen(c: AppContainer, nav: Nav) {
                 SwitchRow(stringResource(R.string.report_include_listing_photos), s.listingPhotosInReports) { b -> scope.launch { c.settings.update { it.copy(listingPhotosInReports = b) } } }
                 Text(stringResource(R.string.listing_photos_copyright), style = MaterialTheme.typography.bodySmall)
             }
+            SectionCard(stringResource(R.string.translation_settings)) {
+                SwitchRow(stringResource(R.string.translate_wifi_only), s.translateWifiOnly) { b -> scope.launch { c.settings.update { it.copy(translateWifiOnly = b) } } }
+                Text(stringResource(R.string.translate_wifi_only_help), style = MaterialTheme.typography.bodySmall)
+            }
             SectionCard(stringResource(R.string.destinations)) {
                 Text(stringResource(R.string.destinations_help), style = MaterialTheme.typography.bodySmall)
                 dests.forEach { d ->

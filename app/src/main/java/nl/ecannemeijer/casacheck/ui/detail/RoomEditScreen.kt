@@ -116,7 +116,7 @@ fun RoomEditScreen(c: AppContainer, nav: Nav, pid: Long, id: Long?) {
                     OutlinedButton(onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }) { Icon(Icons.Filled.AddPhotoAlternate, null) }
                 }
                 Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    photos.forEach { ph -> Thumb(CasaFiles.file(ph.thumbPath ?: ph.filePath), Modifier.size(96.dp).clickable { nav.photo(pid, ph.id) }) }
+                    photos.forEach { ph -> nl.ecannemeijer.casacheck.ui.photos.DeletablePhotoThumb(c, ph, Modifier.size(96.dp)) { nav.photo(pid, ph.id) } }
                 }
             }
             Button(onClick = { scope.launch { c.inspections.startSession(pid, InspectionMode.BY_ROOM, r.id, null); nav.wizard(pid, InspectionMode.BY_ROOM, r.id) } },

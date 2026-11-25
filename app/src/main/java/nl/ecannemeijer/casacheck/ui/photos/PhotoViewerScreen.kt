@@ -66,8 +66,10 @@ import nl.ecannemeijer.casacheck.ui.nav.Nav
 @Composable
 fun PhotoViewerScreen(c: AppContainer, nav: Nav, pid: Long, photoId: Long, filter: String) {
     val all by remember { c.photos.observe(pid) }.collectAsState(null)
-    val list = all?.let { PhotoFilters.apply(it, filter) }?.let { l -> if (l.any { it.id == photoId }) l else all!!.filter { it.id == photoId } }
+    // The opened photo is shown even if it does not match the filter; once it is deleted, the remaining photos stay browsable.
+    val list = all?.let { a -> PhotoFilters.apply(a, filter).let { l -> if (l.any { it.id == photoId } || a.none { it.id == photoId }) l else a.filter { it.id == photoId } } }
     if (list == null) return
+    if (list.isEmpty()) { LaunchedEffect(Unit) { nav.back() }; return }
     val startIndex = list.indexOfFirst { it.id == photoId }.coerceAtLeast(0)
     val pager = rememberPagerState(startIndex) { list.size }
     val current = list.getOrNull(pager.currentPage)
@@ -83,6 +85,7 @@ fun PhotoViewerScreen(c: AppContainer, nav: Nav, pid: Long, photoId: Long, filte
                 IconButton(onClick = { nav.annotate(ph.id) }) { Icon(Icons.Filled.Brush, stringResource(R.string.annotate)) }
                 IconButton(onClick = { nav.photoCompare(pid, ph.id) }) { Icon(Icons.Filled.CompareArrows, stringResource(R.string.compare)) }
                 IconButton(onClick = { CasaFiles.file(if (showEdited) ph.editedPath ?: ph.filePath else ph.filePath)?.let { Intents.share(ctx, it, "image/jpeg") } }) { Icon(Icons.Filled.Share, stringResource(R.string.share)) }
+                IconButton(onClick = { confirmDelete = true }) { Icon(Icons.Filled.Delete, stringResource(R.string.delete_photo)) }
                 IconButton(onClick = { info = !info }) { Icon(Icons.Filled.Info, stringResource(R.string.details)) }
             }
         }
@@ -97,7 +100,7 @@ fun PhotoViewerScreen(c: AppContainer, nav: Nav, pid: Long, photoId: Long, filte
         }
     }
     if (confirmDelete && current != null) ConfirmDialog(stringResource(R.string.delete_photo), stringResource(R.string.delete_photo_text), stringResource(R.string.delete),
-        onConfirm = { c.scope.launch { c.photos.delete(current) }; if (list.size <= 1) nav.back() }, onDismiss = { confirmDelete = false })
+        onConfirm = { c.scope.launch { c.photos.delete(current) } }, onDismiss = { confirmDelete = false })
     if (premark && current != null) PremarkDialog(c, current, onCreated = { id -> nav.item(id) }) { premark = false }
 }
 

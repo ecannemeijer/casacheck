@@ -138,7 +138,7 @@ fun DefectEditScreen(c: AppContainer, nav: Nav, pid: Long, id: Long?) {
                 SectionCard(stringResource(R.string.tab_photos)) {
                     Button(onClick = { nav.camera(CameraTarget(pid, defectId = sid, roomId = x.roomId, kind = PhotoKind.DEFECT)) }) { Icon(Icons.Filled.CameraAlt, null); Text(" " + stringResource(R.string.take_photo)) }
                     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        photos.filter { it.defectId == sid }.forEach { ph -> Thumb(CasaFiles.file(ph.thumbPath ?: ph.filePath), Modifier.size(96.dp).clickable { nav.photo(pid, ph.id) }) }
+                        photos.filter { it.defectId == sid }.forEach { ph -> nl.ecannemeijer.casacheck.ui.photos.DeletablePhotoThumb(c, ph, Modifier.size(96.dp)) { nav.photo(pid, ph.id) } }
                     }
                 }
                 x.itemId?.let { iid -> OutlinedButton(onClick = { nav.item(iid) }, Modifier.fillMaxWidth()) { Text(stringResource(R.string.open_checkpoint)) } }

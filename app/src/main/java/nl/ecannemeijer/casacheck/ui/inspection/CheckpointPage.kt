@@ -167,7 +167,7 @@ fun CheckpointPage(c: AppContainer, nav: Nav, item: ItemWithResult, roomName: St
             OutlinedButton(onClick = { linkDialog = true }, Modifier.height(56.dp)) { Icon(Icons.Filled.Link, stringResource(R.string.link_existing_photo)) }
         }
         if (photos.isNotEmpty()) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            photos.forEach { ph -> Thumb(CasaFiles.file(ph.thumbPath ?: ph.filePath), Modifier.size(96.dp).clickable { nav.photo(item.propertyId, ph.id) }) }
+            photos.forEach { ph -> nl.ecannemeijer.casacheck.ui.photos.DeletablePhotoThumb(c, ph, Modifier.size(96.dp)) { nav.photo(item.propertyId, ph.id) } }
         }
         AutoSaveField(stringResource(R.string.notes), item.notes, { v -> scope.launch { c.inspections.setNotes(item.id, v) } }, singleLine = false, minLines = 2)
         if (def != null && (status.isDefect || status == CheckStatus.UNSURE)) {

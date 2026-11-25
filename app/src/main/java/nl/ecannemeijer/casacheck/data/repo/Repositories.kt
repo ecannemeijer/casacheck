@@ -114,10 +114,22 @@ class PhotoRepository(private val db: CasaDatabase, private val files: FileStore
     suspend fun unlink(photoId: Long, itemId: Long) = dao.unlink(photoId, itemId)
     suspend fun links(photoId: Long) = dao.linksForPhoto(photoId)
 
-    suspend fun delete(photo: Photo) {
-        dao.delete(photo.id)
-        files.delete(photo.filePath); files.delete(photo.thumbPath); files.delete(photo.editedPath)
-        db.propertyDao().get(photo.propertyId)?.takeIf { it.mainPhotoId == photo.id }?.let { db.propertyDao().setMainPhoto(it.id, null) }
+    /**
+     * Deletes photos everywhere: the row (checkpoint links, annotation and listing-gallery entry cascade), the main-photo
+     * reference of the property, and the original/thumbnail/annotated files (unless another row still uses the same file).
+     */
+    suspend fun delete(photo: Photo) = deleteAll(listOf(photo))
+
+    suspend fun deleteAll(photos: List<Photo>): Unit = withContext(Dispatchers.IO) {
+        if (photos.isEmpty()) return@withContext
+        val unused = db.withTransaction {
+            photos.forEach { ph ->
+                dao.delete(ph.id)
+                db.propertyDao().get(ph.propertyId)?.takeIf { it.mainPhotoId == ph.id }?.let { db.propertyDao().setMainPhoto(it.id, null) }
+            }
+            photos.flatMap { listOf(it.filePath, it.thumbPath, it.editedPath) }.filterNotNull().distinct().filter { dao.countUsingFile(it) == 0 }
+        }
+        unused.forEach { files.delete(it) }
     }
 
     suspend fun annotation(photoId: Long) = dao.annotation(photoId)

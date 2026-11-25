@@ -147,7 +147,7 @@ fun MoistureEditScreen(c: AppContainer, nav: Nav, pid: Long, id: Long?) {
                 val sid = savedId!!
                 Button(onClick = { nav.camera(CameraTarget(pid, moistureId = sid, roomId = x.roomId)) }) { Icon(Icons.Filled.CameraAlt, null); Text(" " + stringResource(R.string.take_photo)) }
                 Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    photos.filter { it.moistureId == sid }.forEach { ph -> Thumb(CasaFiles.file(ph.thumbPath ?: ph.filePath), Modifier.size(96.dp).clickable { nav.photo(pid, ph.id) }) }
+                    photos.filter { it.moistureId == sid }.forEach { ph -> nl.ecannemeijer.casacheck.ui.photos.DeletablePhotoThumb(c, ph, Modifier.size(96.dp)) { nav.photo(pid, ph.id) } }
                 }
             }
         }
@@ -205,7 +205,7 @@ fun CrackEditScreen(c: AppContainer, nav: Nav, pid: Long, id: Long?, prev: Long?
                 val sid = savedId!!
                 Button(onClick = { nav.camera(CameraTarget(pid, crackId = sid, roomId = x.roomId)) }) { Icon(Icons.Filled.CameraAlt, null); Text(" " + stringResource(R.string.take_photo)) }
                 Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    photos.filter { it.crackId == sid }.forEach { ph -> Thumb(CasaFiles.file(ph.thumbPath ?: ph.filePath), Modifier.size(96.dp).clickable { nav.photo(pid, ph.id) }) }
+                    photos.filter { it.crackId == sid }.forEach { ph -> nl.ecannemeijer.casacheck.ui.photos.DeletablePhotoThumb(c, ph, Modifier.size(96.dp)) { nav.photo(pid, ph.id) } }
                 }
                 OutlinedButton(onClick = { nav.back(); nav.crack(pid, prev = sid) }, Modifier.fillMaxWidth()) { Text(stringResource(R.string.crack_followup)) }
             }

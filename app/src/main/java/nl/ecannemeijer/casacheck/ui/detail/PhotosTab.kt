@@ -27,6 +27,10 @@ import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.CompareArrows
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import nl.ecannemeijer.casacheck.ui.common.ConfirmDialog
 import androidx.compose.material.icons.filled.PriorityHigh
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -80,6 +84,7 @@ fun PhotosTab(vm: DetailVm, nav: Nav) {
     val removed = lp.filter { it.removedFromListing }.map { it.photoId }.toSet()
     var filter by rememberSaveable { mutableStateOf("ALL") }
     var sel by remember { mutableStateOf(listOf<Long>()) }
+    var askDelete by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(30)) { uris ->
         scope.launch { uris.forEach { u -> runCatching { vm.c.photos.addFromUri(vm.pid, u, PhotoKind.INSPECTION) } } }
@@ -97,8 +102,12 @@ fun PhotosTab(vm: DetailVm, nav: Nav) {
         }
         if (sel.isNotEmpty()) Row(Modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(R.string.compare_pick_hint, sel.size), Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
+            OutlinedButton(onClick = { askDelete = true }) { Icon(Icons.Filled.Delete, null); Text(" " + stringResource(R.string.delete_selected, sel.size)) }
+            Spacer(Modifier.width(6.dp))
             Button(enabled = sel.size == 2, onClick = { nav.photoCompare(vm.pid, sel[0], sel[1]); sel = emptyList() }) { Icon(Icons.Filled.CompareArrows, null); Text(" " + stringResource(R.string.compare)) }
         }
+        if (askDelete) ConfirmDialog(stringResource(R.string.delete_photos_title), stringResource(R.string.delete_photos_text, sel.size), stringResource(R.string.delete),
+            onConfirm = { val del = photos.filter { it.id in sel }; sel = emptyList(); vm.c.scope.launch { vm.c.photos.deleteAll(del) } }, onDismiss = { askDelete = false })
         val list = PhotoFilters.apply(photos, filter)
         if (list.isEmpty()) EmptyState(Icons.Filled.CameraAlt, stringResource(R.string.no_photos), stringResource(R.string.no_photos_text))
         LazyVerticalGrid(GridCells.Adaptive(110.dp), contentPadding = PaddingValues(12.dp), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {

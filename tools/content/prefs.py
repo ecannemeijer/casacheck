@@ -1,0 +1,22 @@
+# code, kind (MAX_EUR, MIN_SQM, BOOL, MAX_KM), (nl, en, it)
+PREFS = [
+("max_purchase", "MAX_EUR", ("Maximaal aankoopbudget", "Maximum purchase budget", "Budget massimo di acquisto")),
+("max_renovation", "MAX_EUR", ("Maximaal renovatiebudget", "Maximum renovation budget", "Budget massimo di ristrutturazione")),
+("max_total", "MAX_EUR", ("Maximaal totaalbudget", "Maximum total budget", "Budget totale massimo")),
+("min_living", "MIN_SQM", ("Minimale woonoppervlakte", "Minimum living area", "Superficie abitabile minima")),
+("min_plot", "MIN_SQM", ("Minimale perceeloppervlakte", "Minimum plot area", "Superficie minima del terreno")),
+("detached", "BOOL", ("Vrijstaande woning", "Detached house", "Casa indipendente")),
+("garage", "BOOL", ("Garage verplicht", "Garage required", "Garage obbligatorio")),
+("garden", "BOOL", ("Tuin verplicht", "Garden required", "Giardino obbligatorio")),
+("double_glazing", "BOOL", ("Dubbel glas gewenst", "Double glazing wanted", "Doppi vetri desiderati")),
+("move_in_ready", "BOOL", ("Direct bewoonbaar", "Ready to move in", "Subito abitabile")),
+("no_serious_damp", "BOOL", ("Geen ernstige vochtproblemen", "No serious damp problems", "Nessun grave problema di umidità")),
+("no_major_structural", "BOOL", ("Geen grote constructieve renovatie", "No major structural renovation", "Nessuna grande ristrutturazione strutturale")),
+("max_sea_km", "MAX_KM", ("Maximale afstand tot zee", "Maximum distance to the sea", "Distanza massima dal mare")),
+("max_family_km", "MAX_KM", ("Maximale afstand tot familie", "Maximum distance to family", "Distanza massima dalla famiglia")),
+("amenities_near", "BOOL", ("Voorzieningen dichtbij", "Amenities nearby", "Servizi vicini")),
+("dogs", "BOOL", ("Geschikt voor honden", "Suitable for dogs", "Adatto ai cani")),
+("solar", "BOOL", ("Mogelijkheid tot zonnepanelen", "Possibility of solar panels", "Possibilità di pannelli solari")),
+("heat_pump", "BOOL", ("Mogelijkheid tot warmtepomp", "Possibility of a heat pump", "Possibilità di pompa di calore")),
+("ev_charger", "BOOL", ("Mogelijkheid tot laadpaal", "Possibility of an EV charger", "Possibilità di colonnina di ricarica")),
+]

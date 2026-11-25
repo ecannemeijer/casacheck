@@ -144,6 +144,7 @@ interface InspectionDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE) suspend fun insertItems(items: List<InspectionItem>): List<Long>
     @Insert suspend fun insertItem(item: InspectionItem): Long
+    @Update suspend fun updateItem(item: InspectionItem)
     @Query("SELECT * FROM inspection_item WHERE propertyId = :pid") suspend fun items(pid: Long): List<InspectionItem>
     @Query("SELECT * FROM inspection_item WHERE id = :id") suspend fun item(id: Long): InspectionItem?
     @Query("DELETE FROM inspection_item WHERE id IN (:ids)") suspend fun deleteItems(ids: List<Long>)
@@ -249,6 +250,11 @@ interface PhotoDao {
     @Query("SELECT * FROM photo WHERE defectId = :defectId") suspend fun forDefect(defectId: Long): List<Photo>
     @Query("SELECT * FROM photo WHERE roomId = :roomId") fun observeForRoom(roomId: Long): Flow<List<Photo>>
     @Query("SELECT COUNT(*) FROM photo WHERE propertyId = :pid") suspend fun count(pid: Long): Int
+    /** Photos that can serve as card image (listing photos first, in gallery order). */
+    @Query("SELECT * FROM photo WHERE kind IN ('LISTING','INSPECTION') ORDER BY propertyId, CASE kind WHEN 'LISTING' THEN 0 ELSE 1 END, sortOrder, takenAt")
+    fun observeMainCandidates(): Flow<List<Photo>>
+    @Query("SELECT * FROM photo WHERE propertyId = :pid AND kind = :kind ORDER BY sortOrder, takenAt") fun observeKind(pid: Long, kind: PhotoKind): Flow<List<Photo>>
+    @Query("SELECT * FROM photo WHERE propertyId = :pid AND originalUrl = :url LIMIT 1") suspend fun byOriginalUrl(pid: Long, url: String): Photo?
     @Insert suspend fun insert(p: Photo): Long
     @Update suspend fun update(p: Photo)
     @Query("DELETE FROM photo WHERE id = :id") suspend fun delete(id: Long)

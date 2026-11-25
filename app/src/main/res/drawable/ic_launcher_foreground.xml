@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CasaCheck icon: house with check mark (own artwork) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#F6EBD9" android:pathData="M54,28L30,48V78H78V48Z"/>
+    <path android:fillColor="#C8643B" android:pathData="M54,24L24,49L28,53L54,31L80,53L84,49Z"/>
+    <path android:strokeColor="#2F5D50" android:strokeWidth="6" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M42,60L51,69L67,52"/>
+</vector>

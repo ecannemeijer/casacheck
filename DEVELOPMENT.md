@@ -19,10 +19,14 @@ De keystore en wachtwoorden staan **nooit** in de repository (`*.jks`, `signing.
 `CASACHECK_SIGNING_PROPERTIES`) met de sleutels `storeFile`, `storePassword`, `keyAlias`, `keyPassword`.
 Zonder dat bestand wordt de release-APK niet ondertekend.
 
-- De release-keystore (`casacheck-release.jks`, alias `casacheck`, RSA 4096, PKCS12) is aangemaakt op de bouwmachine
-  (de Grok Bot-box) in `~/.casacheck/` met daarnaast `signing.properties`.
-  **Maak hiervan een veilige back-up**: updates van de app moeten met dezelfde sleutel ondertekend worden.
-- Om op een andere pc te ondertekenen: kopieer beide bestanden naar `%USERPROFILE%\.casacheck\` en pas `storeFile` aan.
+- **Release-sleutel (vanaf 1.0.0):** `casacheck-release.jks` (alias `casacheck`, RSA 4096, PKCS12) op de laptop van Enrico in
+  `%USERPROFILE%\.casacheck\`, met daarnaast `signing.properties`. Certificaat-SHA-256:
+  `c9c0d3243d4a323fa2428d788490d182dabe4951718b6927cd32e7362b29db9f`.
+  **Maak hiervan een veilige back-up** (bijv. versleuteld op een USB-stick of in een wachtwoordkluis): updates van de app
+  moeten met dezelfde sleutel ondertekend worden, anders moet de app eerst verwijderd worden.
+- Een eerdere sleutel op de Grok Bot-box (`/workspace/casacheck-keys/`, cert-SHA-256 `5b7559...cd02`) is nooit gebruikt voor een
+  verspreide build en is **niet** de release-sleutel.
+- Om op een andere pc te ondertekenen: kopieer beide bestanden naar `%USERPROFILE%\.casacheck\` (of `~/.casacheck/`) en pas `storeFile` aan.
 - Controle: `apksigner verify --print-certs CasaCheck-1.0.0.apk`.
 
 ## Architectuur

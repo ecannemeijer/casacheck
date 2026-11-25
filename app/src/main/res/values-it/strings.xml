@@ -379,7 +379,7 @@
     <string name="defect_auto_created">Creato automaticamente da un punto di controllo</string>
     <string name="defect_from_checkpoint">Da punto di controllo</string>
     <string name="defect_status">Stato del difetto</string>
-    <string name="defect_title">Descrizione</string>
+    <string name="defect_title">Titolo (breve)</string>
     <string name="defects_auto_note">I punti con stato \'dubbio\', \'problema\' o \'grave\' vengono aggiunti automaticamente come difetti.</string>
     <string name="defects_without_cost">%1$d difetti senza costo</string>
     <string name="delete_custom_point">Elimina punto personalizzato</string>

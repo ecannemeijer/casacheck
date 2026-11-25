@@ -380,7 +380,7 @@
     <string name="defect_auto_created">Automatisch aangemaakt vanuit een controlepunt</string>
     <string name="defect_from_checkpoint">Vanuit controlepunt</string>
     <string name="defect_status">Status gebrek</string>
-    <string name="defect_title">Omschrijving</string>
+    <string name="defect_title">Titel (kort)</string>
     <string name="defects_auto_note">Punten met status \'twijfel\', \'probleem\' of \'ernstig\' worden automatisch als gebrek toegevoegd.</string>
     <string name="defects_without_cost">%1$d gebreken zonder kosten</string>
     <string name="delete_custom_point">Eigen controlepunt verwijderen</string>

@@ -109,7 +109,7 @@ S = [
 ("defect_auto_created", "Automatisch aangemaakt vanuit een controlepunt", "Created automatically from a checkpoint", "Creato automaticamente da un punto di controllo"),
 ("defect_from_checkpoint", "Vanuit controlepunt", "From checkpoint", "Da punto di controllo"),
 ("defect_status", "Status gebrek", "Defect status", "Stato del difetto"),
-("defect_title", "Omschrijving", "Description", "Descrizione"),
+("defect_title", "Titel (kort)", "Title (short)", "Titolo (breve)"),
 ("defects_auto_note", "Punten met status 'twijfel', 'probleem' of 'ernstig' worden automatisch als gebrek toegevoegd.", "Points with status 'doubt', 'problem' or 'serious' are added automatically as defects.", "I punti con stato 'dubbio', 'problema' o 'grave' vengono aggiunti automaticamente come difetti."),
 ("defects_without_cost", "%1$d gebreken zonder kosten", "%1$d defects without cost", "%1$d difetti senza costo"),
 ("delete_custom_point", "Eigen controlepunt verwijderen", "Delete custom checkpoint", "Elimina punto personalizzato"),

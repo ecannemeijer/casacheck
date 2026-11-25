@@ -379,7 +379,7 @@
     <string name="defect_auto_created">Created automatically from a checkpoint</string>
     <string name="defect_from_checkpoint">From checkpoint</string>
     <string name="defect_status">Defect status</string>
-    <string name="defect_title">Description</string>
+    <string name="defect_title">Title (short)</string>
     <string name="defects_auto_note">Points with status \'doubt\', \'problem\' or \'serious\' are added automatically as defects.</string>
     <string name="defects_without_cost">%1$d defects without cost</string>
     <string name="delete_custom_point">Delete custom checkpoint</string>

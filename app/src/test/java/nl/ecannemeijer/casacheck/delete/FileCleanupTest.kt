@@ -18,7 +18,8 @@ class FileCleanupTest {
         assertThat(plan.files).containsExactly("photos/a.jpg", "reports/r1.pdf")
         assertThat(plan.dirs).containsExactly(
             "photos/0f3c2a1e-1111-2222-3333-444455556666", "thumbs/0f3c2a1e-1111-2222-3333-444455556666",
-            "docs/0f3c2a1e-1111-2222-3333-444455556666", "edited/0f3c2a1e-1111-2222-3333-444455556666")
+            "docs/0f3c2a1e-1111-2222-3333-444455556666", "edited/0f3c2a1e-1111-2222-3333-444455556666",
+            "recordings/0f3c2a1e-1111-2222-3333-444455556666")
     }
 
     @Test fun unsafeUuidNeverTargetsWholeFolders() {
@@ -31,20 +32,20 @@ class FileCleanupTest {
         val root = tmp.newFolder("files")
         val outside = touch(tmp.root, "outside.txt")
         val mine = "aaaaaaaa-0000-0000-0000-000000000001"; val other = "bbbbbbbb-0000-0000-0000-000000000002"
-        listOf("photos", "thumbs", "docs", "edited").forEach { touch(root, "$it/$mine/f.jpg"); touch(root, "$it/$other/f.jpg") }
+        listOf("photos", "thumbs", "docs", "edited", "recordings").forEach { touch(root, "$it/$mine/f.jpg"); touch(root, "$it/$other/f.jpg") }
         val report = touch(root, "reports/mine.pdf"); val otherReport = touch(root, "reports/other.pdf")
 
         val plan = FileCleanup.planForProperty(mine, listOf("reports/mine.pdf", "../outside.txt", "photos/$mine/f.jpg"))
         val removed = FileCleanup.execute(root, plan)
 
-        listOf("photos", "thumbs", "docs", "edited").forEach {
+        listOf("photos", "thumbs", "docs", "edited", "recordings").forEach {
             assertThat(File(root, "$it/$mine").exists()).isFalse()
             assertThat(File(root, "$it/$other/f.jpg").exists()).isTrue()
         }
         assertThat(report.exists()).isFalse()
         assertThat(otherReport.exists()).isTrue()
         assertThat(outside.exists()).isTrue()
-        assertThat(removed).isEqualTo(6) // 2 files + 4 folders
+        assertThat(removed).isEqualTo(7) // 2 files + 5 folders
     }
 
     @Test fun deleteFileRefusesTraversalFoldersAndMissingFiles() {

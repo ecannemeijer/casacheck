@@ -4,5 +4,6 @@
     <files-path name="photos" path="photos/" />
     <files-path name="edited" path="edited/" />
     <files-path name="docs" path="docs/" />
+    <files-path name="recordings" path="recordings/" />
     <cache-path name="share" path="share/" />
 </paths>

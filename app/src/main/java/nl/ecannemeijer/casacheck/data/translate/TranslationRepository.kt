@@ -2,6 +2,7 @@ package nl.ecannemeijer.casacheck.data.translate
 
 import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import nl.ecannemeijer.casacheck.data.db.CasaDatabase
 import nl.ecannemeijer.casacheck.data.db.Translation
 import nl.ecannemeijer.casacheck.data.settings.SettingsStore
@@ -25,5 +26,30 @@ class TranslationRepository(private val db: CasaDatabase, private val translator
     suspend fun translateText(text: String, onStage: (TranslateStage) -> Unit = {}): TranslateResult =
         translator.translate(text, TARGET, settings.current().translateWifiOnly, onStage)
 
-    companion object { const val TARGET = TranslateLanguage.DUTCH }
+    /**
+     * Translates a transcript (one line per segment, so the timestamps stay aligned) to [target] (nl/en) and caches it
+     * under field "rec:<id>". Returns the translated lines (same count as [lines]).
+     */
+    suspend fun translateTranscript(pid: Long, recordingId: Long, lines: List<String>, target: String, sourceLang: String?, onStage: (TranslateStage) -> Unit = {}): Pair<TranslateResult, List<String>?> {
+        val text = lines.joinToString("\n") { it.replace('\n', ' ').trim() }
+        val field = transcriptField(recordingId)
+        val h = TranslationText.hash(text)
+        dao.get(pid, field, target)?.takeIf { it.sourceHash == h }?.let { return TranslateResult.Ok(it.text, it.sourceLang) to alignLines(it.text, lines.size) }
+        val r = translator.translate(text, target, settings.current().translateWifiOnly, onStage, sourceLang)
+        if (r is TranslateResult.Ok) {
+            dao.upsert(Translation(propertyId = pid, field = field, sourceHash = h, sourceLang = r.sourceLang, targetLang = target, text = r.text))
+            return r to alignLines(r.text, lines.size)
+        }
+        return r to null
+    }
+
+    fun observeTranscript(pid: Long, recordingId: Long): Flow<List<Translation>> =
+        dao.observe(pid).map { l -> l.filter { it.field == transcriptField(recordingId) } }
+
+    companion object {
+        const val TARGET = TranslateLanguage.DUTCH
+        fun transcriptField(recordingId: Long) = "rec:$recordingId"
+        /** Pads/truncates so line i always belongs to segment i. */
+        fun alignLines(text: String, n: Int): List<String> = text.split("\n").let { l -> List(n) { i -> l.getOrElse(i) { "" } } }
+    }
 }

@@ -54,10 +54,10 @@ class TextTranslator(private val context: Context) {
         return TranslateLanguage.fromLanguageTag(tag ?: "und") ?: TranslateLanguage.ITALIAN
     }
 
-    suspend fun translate(text: String, target: String = TranslateLanguage.DUTCH, wifiOnly: Boolean = false, onStage: (TranslateStage) -> Unit = {}): TranslateResult {
+    suspend fun translate(text: String, target: String = TranslateLanguage.DUTCH, wifiOnly: Boolean = false, onStage: (TranslateStage) -> Unit = {}, sourceHint: String? = null): TranslateResult {
         if (text.isBlank()) return TranslateResult.Ok("", TranslateLanguage.ITALIAN)
         onStage(TranslateStage.DETECTING)
-        val source = detect(text)
+        val source = sourceHint?.let { TranslateLanguage.fromLanguageTag(it) } ?: detect(text)
         if (source == target) return TranslateResult.AlreadyTarget
         val needed = listOf(source, target).filter { it != TranslateLanguage.ENGLISH }
         val missing = needed.filterNot { isModelDownloaded(it) }

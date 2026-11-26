@@ -33,10 +33,31 @@ class MigrationTest {
         db.close()
     }
 
-    @Test fun migrate1To3AllMigrations() {
-        val name = "mig-1-3.db"
+    @Test fun migrate1To4AllMigrations() {
+        val name = "mig-1-4.db"
         helper.createDatabase(name, 1).apply { execSQL(insertProperty); close() }
-        helper.runMigrationsAndValidate(name, 3, true, *Migrations.ALL).close()
+        helper.runMigrationsAndValidate(name, 4, true, *Migrations.ALL).close()
+    }
+
+    @Test fun migrate3To4KeepsDataAndAddsRecordingTables() {
+        val name = "mig-3-4.db"
+        helper.createDatabase(name, 3).apply {
+            execSQL(insertProperty)
+            execSQL("INSERT INTO translation (propertyId, field, sourceHash, sourceLang, targetLang, text, createdAt) VALUES (1, 'description', 'h', 'it', 'nl', 'Stenen huis', 1)")
+            close()
+        }
+        val db = helper.runMigrationsAndValidate(name, 4, true, Migrations.MIGRATION_3_4)
+        db.query("SELECT text FROM translation WHERE propertyId = 1").use { c -> assertTrue(c.moveToFirst()); assertEquals("Stenen huis", c.getString(0)) }
+        db.execSQL("INSERT INTO recording (id, uuid, propertyId, name, filePath, mime, durationMs, sizeBytes, status, createdAt, transcriptStatus) " +
+            "VALUES (1, 'r-1', 1, 'Bezichtiging', 'recordings/u-1/r-1.m4a', 'audio/mp4', 60000, 1000, 'DONE', 1, 'NONE')")
+        db.execSQL("INSERT INTO recording_marker (recordingId, positionMs, createdAt) VALUES (1, 5000, 1)")
+        db.execSQL("INSERT INTO transcript_segment (recordingId, idx, startMs, endMs, text) VALUES (1, 0, 0, 2500, 'Buongiorno')")
+        db.execSQL("PRAGMA foreign_keys = ON")
+        db.execSQL("DELETE FROM property WHERE id = 1")
+        listOf("recording", "recording_marker", "transcript_segment").forEach { t ->
+            db.query("SELECT COUNT(*) FROM $t").use { c -> c.moveToFirst(); assertEquals(t, 0, c.getInt(0)) }
+        }
+        db.close()
     }
 
     @Test fun roomOpensMigratedDbAndCascadesTranslations() = runBlocking<Unit> {

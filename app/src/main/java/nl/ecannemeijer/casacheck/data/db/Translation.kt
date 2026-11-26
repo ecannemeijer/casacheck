@@ -38,4 +38,5 @@ interface TranslationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsert(t: Translation): Long
     @Query("DELETE FROM translation WHERE propertyId = :pid") suspend fun deleteFor(pid: Long)
     @Query("SELECT COUNT(*) FROM translation") suspend fun count(): Int
+    @Query("DELETE FROM translation WHERE propertyId = :pid AND field LIKE :prefix || '%'") suspend fun deleteFieldPrefix(pid: Long, prefix: String)
 }

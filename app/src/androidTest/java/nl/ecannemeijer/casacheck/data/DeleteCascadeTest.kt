@@ -23,6 +23,12 @@ import nl.ecannemeijer.casacheck.data.db.PhotoAnnotation
 import nl.ecannemeijer.casacheck.data.db.PhotoInspectionLink
 import nl.ecannemeijer.casacheck.data.db.PhotoKind
 import nl.ecannemeijer.casacheck.data.db.Property
+import nl.ecannemeijer.casacheck.data.db.Recording
+import nl.ecannemeijer.casacheck.data.db.RecordingMarker
+import nl.ecannemeijer.casacheck.data.db.TranscriptSegment
+import nl.ecannemeijer.casacheck.data.db.Translation
+import nl.ecannemeijer.casacheck.data.recording.RecordingRepository
+import nl.ecannemeijer.casacheck.data.translate.TranslationRepository
 import nl.ecannemeijer.casacheck.data.db.PropertyFeature
 import nl.ecannemeijer.casacheck.data.db.Report
 import nl.ecannemeijer.casacheck.data.db.Room
@@ -60,7 +66,7 @@ class DeleteCascadeTest {
 
     private fun file(dir: File, name: String) = File(dir, name).apply { writeText("test") }
 
-    data class Seed(val pid: Long, val uuid: String, val itemId: Long, val photoIds: List<Long>, val docId: Long, val moistId: Long, val files: List<File>)
+    data class Seed(val pid: Long, val uuid: String, val itemId: Long, val photoIds: List<Long>, val docId: Long, val moistId: Long, val files: List<File>, val recId: Long = 0, val recFile: File? = null)
 
     private suspend fun seed(title: String): Seed {
         val pid = db.propertyDao().insert(Property(title = title))
@@ -92,7 +98,12 @@ class DeleteCascadeTest {
         db.documentDao().insertFile(DocumentFile(documentId = doc, filePath = files.relative(docFile), displayName = "ape.pdf", mimeType = "application/pdf"))
         val pdf = file(files.reportsDir(), "test_${uuid}.pdf"); created += pdf
         db.reportDao().insert(Report(propertyId = pid, type = "full", language = "nl", filePath = files.relative(pdf), title = title))
-        return Seed(pid, uuid, item, ids, doc, moist, created)
+        val recFile = file(files.recordingsDir(uuid), "rec.m4a"); created += recFile
+        val rec = db.recordingDao().insert(Recording(propertyId = pid, name = "Bezichtiging", filePath = files.relative(recFile), durationMs = 1000, sizeBytes = 4))
+        db.recordingDao().insertMarker(RecordingMarker(recordingId = rec, positionMs = 500, label = "Cucina", itemId = item))
+        db.recordingDao().insertSegments(listOf(TranscriptSegment(recordingId = rec, idx = 0, startMs = 0, endMs = 900, text = "Buongiorno")))
+        db.translationDao().upsert(Translation(propertyId = pid, field = TranslationRepository.transcriptField(rec), sourceHash = "h", sourceLang = "it", targetLang = "nl", text = "Goedendag"))
+        return Seed(pid, uuid, item, ids, doc, moist, created, rec, recFile)
     }
 
     private fun rowsOf(s: Seed): Int = listOf(
@@ -102,20 +113,21 @@ class DeleteCascadeTest {
         "crack_measurement WHERE propertyId = ${s.pid}", "document WHERE propertyId = ${s.pid}", "document_file WHERE documentId = ${s.docId}",
         "photo WHERE propertyId = ${s.pid}", "photo_inspection_link WHERE itemId = ${s.itemId}",
         "photo_annotation WHERE photoId IN (${s.photoIds.joinToString()})", "report WHERE propertyId = ${s.pid}",
-        "import_history WHERE propertyId = ${s.pid}",
+        "import_history WHERE propertyId = ${s.pid}", "recording WHERE propertyId = ${s.pid}", "recording_marker WHERE recordingId = ${s.recId}",
+        "transcript_segment WHERE recordingId = ${s.recId}", "translation WHERE propertyId = ${s.pid}",
     ).sumOf { count(it) }
 
     @Test fun deletingPropertyRemovesAllRowsAndFilesButNotOtherProperty() = runBlocking<Unit> {
         val a = seed("A"); val b = seed("B")
-        assertThat(rowsOf(a)).isEqualTo(20)
+        assertThat(rowsOf(a)).isEqualTo(24)
         assertThat(a.files.all { it.exists() }).isTrue()
 
         props.delete(a.pid)
 
         assertThat(rowsOf(a)).isEqualTo(0)
         assertThat(a.files.none { it.exists() }).isTrue()
-        listOf("photos", "thumbs", "docs", "edited").forEach { assertThat(File(files.root, "$it/${a.uuid}").exists()).isFalse() }
-        assertThat(rowsOf(b)).isEqualTo(20)
+        listOf("photos", "thumbs", "docs", "edited", "recordings").forEach { assertThat(File(files.root, "$it/${a.uuid}").exists()).isFalse() }
+        assertThat(rowsOf(b)).isEqualTo(24)
         assertThat(b.files.all { it.exists() }).isTrue()
         props.delete(b.pid)
         assertThat(b.files.none { it.exists() }).isTrue()
@@ -137,6 +149,22 @@ class DeleteCascadeTest {
         assertThat(files.resolve(photos.get(s.photoIds[1])!!.filePath)!!.exists()).isTrue()
         assertThat(count("inspection_item WHERE id = ${s.itemId}")).isEqualTo(1)
         props.delete(s.pid)
+    }
+
+    @Test fun deletingRecordingRemovesFileMarkersSegmentsAndTranslation() = runBlocking<Unit> {
+        val s = seed("R")
+        val repo = RecordingRepository(ctx, db, files)
+        val other = db.recordingDao().insert(Recording(propertyId = s.pid, name = "Tweede", filePath = files.relative(file(files.recordingsDir(s.uuid), "b.m4a"))))
+        repo.delete(s.recId)
+        assertThat(count("recording WHERE id = ${s.recId}")).isEqualTo(0)
+        assertThat(count("recording_marker WHERE recordingId = ${s.recId}")).isEqualTo(0)
+        assertThat(count("transcript_segment WHERE recordingId = ${s.recId}")).isEqualTo(0)
+        assertThat(count("translation WHERE propertyId = ${s.pid}")).isEqualTo(0)
+        assertThat(s.recFile!!.exists()).isFalse()
+        assertThat(count("recording WHERE id = $other")).isEqualTo(1)
+        assertThat(count("inspection_item WHERE id = ${s.itemId}")).isEqualTo(1)
+        props.delete(s.pid)
+        assertThat(File(files.root, "recordings/${s.uuid}").exists()).isFalse()
     }
 
     @Test fun fileSharedByAnotherPhotoRowIsKept() = runBlocking<Unit> {

@@ -27,6 +27,7 @@ class FileStore(private val context: Context) {
     fun thumbsDir(propertyUuid: String) = File(root, "thumbs/$propertyUuid").apply { mkdirs() }
     fun docsDir(propertyUuid: String) = File(root, "docs/$propertyUuid").apply { mkdirs() }
     fun reportsDir() = File(root, "reports").apply { mkdirs() }
+    fun recordingsDir(propertyUuid: String) = File(root, "recordings/$propertyUuid").apply { mkdirs() }
     fun editedDir(propertyUuid: String) = File(root, "edited/$propertyUuid").apply { mkdirs() }
     fun cameraTemp(): File = File(context.cacheDir, "camera").apply { mkdirs() }.let { File(it, "cap_${System.nanoTime()}.jpg") }
 

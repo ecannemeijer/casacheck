@@ -8,7 +8,7 @@ import java.io.File
  */
 object FileCleanup {
     /** Sub-directories of filesDir that hold one folder per property (named after the property's uuid). */
-    val PROPERTY_DIRS = listOf("photos", "thumbs", "docs", "edited")
+    val PROPERTY_DIRS = listOf("photos", "thumbs", "docs", "edited", "recordings")
     private val SAFE_UUID = Regex("[A-Za-z0-9-]{8,64}")
 
     data class Plan(val files: List<String>, val dirs: List<String>)

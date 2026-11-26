@@ -51,6 +51,8 @@ class AppContainer(context: Context, dbName: String? = CasaDatabase.NAME) {
     val screenshotImport by lazy { ScreenshotImportProvider(MlKitOcrEngine(appContext)) }
     val backup = BackupManager(appContext, db, files)
     val updates = nl.ecannemeijer.casacheck.data.update.UpdateManager(appContext)
+    val recordings = nl.ecannemeijer.casacheck.data.recording.RecordingRepository(appContext, db, files)
+    val player = nl.ecannemeijer.casacheck.data.recording.AudioPlayer(appContext)
     val translations = nl.ecannemeijer.casacheck.data.translate.TranslationRepository(db, nl.ecannemeijer.casacheck.data.translate.TextTranslator(appContext), settings)
     val reports = PdfReportGenerator(appContext, db, files, snapshots, inspections, settings)
     /** Scope for work that must outlive a screen (e.g. deleting after navigating away). */
@@ -71,6 +73,8 @@ class CasaApp : Application() {
         super.onCreate()
         CasaFiles.root = filesDir
         container = AppContainer(this)
+        val started = System.currentTimeMillis()
+        appScope.launch { runCatching { container.recordings.recoverInterrupted(started) } }
         appScope.launch {
             container.inspections.seedLibrary()
             container.agent.seed()

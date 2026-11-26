@@ -167,6 +167,29 @@ class DeleteCascadeTest {
         assertThat(File(files.root, "recordings/${s.uuid}").exists()).isFalse()
     }
 
+    @Test fun backupRoundTripKeepsRecordingFileMarkersAndTranscript() = runBlocking<Unit> {
+        val s = seed("Backup")
+        val backup = nl.ecannemeijer.casacheck.data.backup.BackupManager(ctx, db, files)
+        val out = java.io.ByteArrayOutputStream()
+        backup.export(out, listOf(s.pid), null)
+        val names = java.util.zip.ZipInputStream(java.io.ByteArrayInputStream(out.toByteArray())).use { z ->
+            generateSequence { z.nextEntry }.map { it.name }.toList()
+        }
+        assertThat(names).contains("files/" + files.relative(s.recFile!!))
+        props.delete(s.pid)
+        assertThat(s.recFile.exists()).isFalse()
+
+        val (info, dir) = backup.inspect(java.io.ByteArrayInputStream(out.toByteArray()))
+        backup.restore(info, dir, nl.ecannemeijer.casacheck.data.backup.DuplicateMode.MERGE)
+        val pid = db.propertyDao().all().single { it.title == "Backup" }.id
+        val rec = db.recordingDao().list(pid).single()
+        assertThat(files.resolve(rec.filePath)!!.readText()).isEqualTo("test")
+        assertThat(db.recordingDao().markers(rec.id).single().label).isEqualTo("Cucina")
+        assertThat(db.recordingDao().markers(rec.id).single().itemId).isNotNull()
+        assertThat(db.recordingDao().segments(rec.id).single().text).isEqualTo("Buongiorno")
+        props.delete(pid)
+    }
+
     @Test fun fileSharedByAnotherPhotoRowIsKept() = runBlocking<Unit> {
         val s = seed("S")
         val a = photos.get(s.photoIds[0])!!

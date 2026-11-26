@@ -60,3 +60,22 @@ Zonder dat bestand wordt de release-APK niet ondertekend.
 - Vertalen (Italiaans → Nederlands) gebeurt op het toestel met ML Kit Translation (`data/translate`). Het taalmodel (~35 MB per taal; IT + NL samen ~70 MB) wordt bij het eerste gebruik gedownload; daarna offline. Instelling "Vertaalmodel alleen via wifi downloaden" in Instellingen.
 - Vertalingen van titel/omschrijving worden gecachet in de tabel `translation` (Room v3, `Migrations.MIGRATION_2_3`, getest in `MigrationTest`). Een gewijzigde advertentietekst (andere hash) wordt opnieuw vertaald.
 - Vragen per controlepunt staan als gestructureerde data in `domain/checklist/CheckpointQuestions*.kt` (IT + NL). `CheckpointQuestionsTest` controleert dat elk controlepunt minstens 2 vragen heeft.
+
+## Opnames en transcriptie (1.0.3)
+
+- **Opnemen**: `data/recording/RecordingService` is een foreground service van het type `microphone` (notificatie met chronometer en Pauze/Markeer/Stop).
+  Codec: AAC-LC, mono, 16 kHz, 32 kbit/s (ca. 14 MB per uur). Tijdens het opnemen wordt naar een ADTS-stroom (`.aac`) geschreven, die een crash
+  overleeft; bij stoppen wordt zonder hercodering naar `.m4a` geremuxt (`AudioFiles.remuxToM4a`). Opnames die bij een crash/process death nog op
+  `RECORDING` stonden worden bij de volgende app-start afgerond (`RecordingRepository.recoverInterrupted`).
+  Pauzeert automatisch tijdens een telefoongesprek (API 31+, `AudioManager.OnModeChangedListener`), weigert te starten onder 50 MB vrij en stopt onder 20 MB.
+- **Status** van de lopende opname staat in `Recorder.state` (StateFlow) en voedt de mini-balk (`ui/recording/RecordControls.kt`) op elk scherm.
+  Een open controlepunt wordt in `Recorder.checkpoint` gezet zodat een markering eraan gekoppeld wordt.
+- **Bestanden**: `filesDir/recordings/<propertyUuid>/<uuid>.m4a`; verwijderen van een woning ruimt de map op (`FileCleanup.PROPERTY_DIRS`).
+  Opnames, markeringen en transcripties zitten in de ZIP-back-up.
+- **Database v4**: tabellen `recording`, `recording_marker`, `transcript_segment` (`Migrations.MIGRATION_3_4`, getest in `MigrationTest`).
+- **Transcriptie**: whisper.cpp v1.9.6 (MIT) staat gevendored in `app/src/main/cpp/whisper.cpp` (alleen de CPU-backend van ggml), met de JNI-brug
+  `whisper_jni.c` en `CMakeLists.txt`; de native lib wordt altijd met `-O3` (Release) gebouwd, ook in debug. Vereist NDK 27.0.12077973 en CMake 3.22.1.
+  Het model `ggml-base-q5_1.bin` (57 MB, meertalig) wordt bij het eerste gebruik van Hugging Face gedownload naar `noBackupFilesDir/whisper` en
+  gecontroleerd op grootte en SHA-256 (`WhisperModel`). `TranscribeWorker` (WorkManager, foreground `dataSync`) decodeert de audio in blokken van
+  5 minuten naar 16 kHz mono en schrijft de segmenten met tijdstempels weg. Vertalen van het transcript (NL/EN) gebruikt ML Kit, gecachet in
+  de tabel `translation` onder veld `rec:<id>` (één regel per segment).

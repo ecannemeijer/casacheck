@@ -119,7 +119,13 @@ private fun RecordingRow(r: Recording, onOpen: () -> Unit, onShare: () -> Unit, 
 fun shareRecording(c: AppContainer, ctx: android.content.Context, r: Recording) {
     val f = c.recordings.fileOf(r)
     if (!f.exists()) { Toast.makeText(ctx, R.string.rec_file_missing, Toast.LENGTH_LONG).show(); return }
-    Intents.share(ctx, f, r.mime.takeIf { it.startsWith("audio/") } ?: "audio/*", r.name)
+    // Share a copy with a readable name (the stored file is named after its uuid).
+    val out = runCatching {
+        val dir = java.io.File(ctx.cacheDir, "share").apply { mkdirs() }
+        dir.listFiles()?.filter { it.extension in setOf("m4a", "aac", "wav", "mp3", "ogg", "opus", "amr", "3gp") }?.forEach { it.delete() }
+        f.copyTo(java.io.File(dir, AudioMath.shareName(r.name, r.filePath)), overwrite = true)
+    }.getOrDefault(f)
+    Intents.share(ctx, out, r.mime.takeIf { it.startsWith("audio/") } ?: "audio/*", r.name)
 }
 
 fun deleteRecording(c: AppContainer, ctx: android.content.Context, r: Recording) {

@@ -19,9 +19,17 @@ object AudioMath {
     }
 
     fun formatSize(bytes: Long, locale: Locale = Locale.getDefault()): String = when {
+        bytes >= 1024L * 1024 * 1024 -> String.format(locale, "%.1f GB", bytes / 1024.0 / 1024.0 / 1024.0)
         bytes >= 1024L * 1024 -> String.format(locale, "%.1f MB", bytes / 1024.0 / 1024.0)
         bytes >= 1024 -> String.format(locale, "%d kB", bytes / 1024)
         else -> "$bytes B"
+    }
+
+    /** Readable, safe file name for sharing (instead of the internal uuid name). */
+    fun shareName(name: String, path: String): String {
+        val ext = path.substringAfterLast('.', "m4a").lowercase().takeIf { it.length in 2..4 } ?: "m4a"
+        val base = name.trim().replace(Regex("[^\\p{L}\\p{N}._-]+"), "_").trim('_').take(80).ifBlank { "audio" }
+        return "$base.$ext"
     }
 
     /** Position of a marker on the seek bar, 0..1. */

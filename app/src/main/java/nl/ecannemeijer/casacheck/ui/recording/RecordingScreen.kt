@@ -63,6 +63,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -326,9 +327,13 @@ private fun SegmentRow(s: TranscriptSegment, translated: String?, active: Boolea
 
 @Composable
 private fun RenameDialog(current: String, onDismiss: () -> Unit, onSave: (String) -> Unit) {
-    var text by remember { mutableStateOf(current) }
+    // Whole name selected, so typing replaces it.
+    var text by remember { mutableStateOf(androidx.compose.ui.text.input.TextFieldValue(current, androidx.compose.ui.text.TextRange(0, current.length))) }
+    val focus = remember { androidx.compose.ui.focus.FocusRequester() }
+    LaunchedEffect(Unit) { focus.requestFocus() }
     AlertDialog(onDismissRequest = onDismiss, title = { Text(stringResource(R.string.rec_rename)) },
-        text = { OutlinedTextField(text, { text = it.take(120) }, singleLine = true, modifier = Modifier.fillMaxWidth()) },
-        confirmButton = { TextButton(onClick = { onSave(text) }, enabled = text.isNotBlank()) { Text(stringResource(R.string.save)) } },
+        text = { OutlinedTextField(text, { text = if (it.text.length <= 120) it else it.copy(text = it.text.take(120)) }, singleLine = true,
+            modifier = Modifier.fillMaxWidth().focusRequester(focus)) },
+        confirmButton = { TextButton(onClick = { onSave(text.text) }, enabled = text.text.isNotBlank()) { Text(stringResource(R.string.save)) } },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } })
 }

@@ -24,6 +24,9 @@ class AudioMathTest {
         assertEquals("512 B", AudioMath.formatSize(512, Locale.ROOT))
         assertEquals("2 kB", AudioMath.formatSize(2048, Locale.ROOT))
         assertEquals("13.7 MB", AudioMath.formatSize(14_400_000, Locale.ROOT))
+        assertEquals("8.1 GB", AudioMath.formatSize(8_700_000_000, Locale.ROOT))
+        assertEquals("Bezichtiging_Via_Roma_3.m4a", AudioMath.shareName("Bezichtiging Via Roma 3", "recordings/x/abc.m4a"))
+        assertEquals("audio.wav", AudioMath.shareName("  ", "x/y.wav"))
     }
 
     @Test fun whisperTimestampsAreOffsetByChunk() {

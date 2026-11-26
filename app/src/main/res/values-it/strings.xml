@@ -807,4 +807,14 @@
     <string name="tx_badge_done">Trascrizione disponibile</string>
     <string name="tx_badge_running">Trascrizione in corso…</string>
     <string name="tx_badge_failed">Trascrizione non riuscita</string>
+    <string name="report_include_transcripts">Includi registrazioni e trascrizioni</string>
+    <string name="section_recordings">Registrazioni della visita</string>
+    <string name="report_transcript">Trascrizione (automatica, sul dispositivo):</string>
+    <string name="report_transcript_translated">Trascrizione (tradotta automaticamente, sul dispositivo):</string>
+    <string name="settings_wifi_models">Scarica i modelli di lingua e voce solo tramite Wi-Fi</string>
+    <string name="settings_recordings">Registrazioni</string>
+    <string name="settings_speech_model">Modello vocale per la trascrizione: %1$s</string>
+    <string name="settings_speech_model_none">non scaricato (57 MB, scaricato alla prima trascrizione)</string>
+    <string name="settings_speech_model_present">sul dispositivo (57 MB)</string>
+    <string name="settings_speech_model_delete">Elimina modello vocale</string>
 </resources>

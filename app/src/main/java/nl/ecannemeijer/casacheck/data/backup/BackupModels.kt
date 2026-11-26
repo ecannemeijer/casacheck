@@ -47,6 +47,9 @@ data class PropertyBundle(
     val imports: List<ImportHistory> = emptyList(),
     val environment: List<EnvironmentRating> = emptyList(),
     val distances: List<DestinationDistance> = emptyList(),
+    val recordings: List<nl.ecannemeijer.casacheck.data.db.Recording> = emptyList(),
+    val recordingMarkers: List<nl.ecannemeijer.casacheck.data.db.RecordingMarker> = emptyList(),
+    val transcriptSegments: List<nl.ecannemeijer.casacheck.data.db.TranscriptSegment> = emptyList(),
 )
 
 @Serializable

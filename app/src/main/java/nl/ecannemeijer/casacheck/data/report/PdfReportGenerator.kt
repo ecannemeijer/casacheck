@@ -48,6 +48,8 @@ data class ReportOptions(
     val includeNotes: Boolean = true,
     /** Listing photos only when the user explicitly allows it (copyright of the advertiser). */
     val includeListingPhotos: Boolean = false,
+    /** Viewing recordings: list with markers and (if available) the transcript, translated into the report language when cached. */
+    val includeTranscripts: Boolean = false,
 )
 
 /** Offline PDF reports (android.graphics.pdf), A4, in nl/it/en independent of the app language. */
@@ -94,6 +96,28 @@ class PdfReportGenerator(
         DocumentStatus.MISSING -> R.string.doc_status_missing; DocumentStatus.DEVIATION -> R.string.doc_status_deviation
         DocumentStatus.SPECIALIST_NEEDED -> R.string.doc_status_specialist
     })
+
+    private suspend fun recordingsSection(w: PdfWriter, ctx: Context, pid: Long, lang: String) {
+        val recs = db.recordingDao().list(pid).filter { it.status == nl.ecannemeijer.casacheck.data.db.RecStatus.DONE }
+        if (recs.isEmpty()) return
+        w.heading2(ctx.getString(R.string.section_recordings))
+        val df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, w.locale)
+        for (r in recs) {
+            w.bullet(r.name + " · " + df.format(Date(r.createdAt)) + " · " + nl.ecannemeijer.casacheck.data.audio.AudioMath.formatTime(r.durationMs))
+            r.notes?.takeIf { it.isNotBlank() }?.let { w.small(it) }
+            db.recordingDao().markers(r.id).forEachIndexed { i, m ->
+                w.small("   ▸ " + nl.ecannemeijer.casacheck.data.audio.AudioMath.formatTime(m.positionMs) + "  " + (m.label ?: ctx.getString(R.string.rec_marker_n, i + 1)))
+            }
+            val segs = db.recordingDao().segments(r.id)
+            if (segs.isEmpty()) continue
+            val tr = if (r.transcriptLang != lang) db.translationDao().get(pid, nl.ecannemeijer.casacheck.data.translate.TranslationRepository.transcriptField(r.id), lang)?.text else null
+            val lines = tr?.let { nl.ecannemeijer.casacheck.data.translate.TranslationRepository.alignLines(it, segs.size) }
+            w.small(ctx.getString(if (lines != null) R.string.report_transcript_translated else R.string.report_transcript))
+            segs.forEachIndexed { i, s ->
+                w.paragraph("[" + nl.ecannemeijer.casacheck.data.audio.AudioMath.formatTime(s.startMs) + "] " + (lines?.getOrNull(i)?.takeIf { it.isNotBlank() } ?: s.text))
+            }
+        }
+    }
 
     private fun yesNo(ctx: Context, b: Boolean?) = when (b) { true -> ctx.getString(R.string.yes); false -> ctx.getString(R.string.no); null -> "–" }
 
@@ -291,6 +315,7 @@ class PdfReportGenerator(
                 val extra = photos.filter { it.includeInReport && it.important && it.defectId == null && (it.kind != PhotoKind.LISTING || opt.includeListingPhotos) }
                 if (extra.isNotEmpty()) { w.heading2(ctx.getString(R.string.section_important_photos)); extra.chunked(2).forEach { row -> w.imageRow(row.map { files.resolve(it.editedPath ?: it.filePath) }) } }
             }
+            if (opt.includeTranscripts) recordingsSection(w, ctx, p.id, opt.language)
             w.heading2(ctx.getString(R.string.section_final))
             w.paragraph(finalText(ctx, score.total, score.completion, score.critical.size))
         }

@@ -807,4 +807,14 @@
     <string name="tx_badge_done">Transcript available</string>
     <string name="tx_badge_running">Transcribing…</string>
     <string name="tx_badge_failed">Transcription failed</string>
+    <string name="report_include_transcripts">Include recordings and transcripts</string>
+    <string name="section_recordings">Viewing recordings</string>
+    <string name="report_transcript">Transcript (automatic, on device):</string>
+    <string name="report_transcript_translated">Transcript (automatically translated, on device):</string>
+    <string name="settings_wifi_models">Download language and speech models over Wi-Fi only</string>
+    <string name="settings_recordings">Recordings</string>
+    <string name="settings_speech_model">Speech model for transcription: %1$s</string>
+    <string name="settings_speech_model_none">not downloaded (57 MB, downloaded on first transcription)</string>
+    <string name="settings_speech_model_present">on device (57 MB)</string>
+    <string name="settings_speech_model_delete">Delete speech model</string>
 </resources>

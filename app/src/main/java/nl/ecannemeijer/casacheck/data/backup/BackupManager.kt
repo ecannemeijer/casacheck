@@ -40,6 +40,8 @@ class BackupManager(private val context: Context, private val db: CasaDatabase, 
                 photos = db.photoDao().list(pid), listingPhotos = db.photoDao().listingPhotos(pid), annotations = db.photoDao().annotationsFor(pid),
                 photoLinks = db.photoDao().linksForProperty(pid), answers = db.agentDao().answers(pid), appointments = db.appointmentDao().listFor(pid),
                 imports = db.listingDao().importsFor(pid), environment = db.environmentDao().list(pid), distances = db.environmentDao().distances(pid),
+                recordings = db.recordingDao().list(pid).filter { it.status == nl.ecannemeijer.casacheck.data.db.RecStatus.DONE },
+                recordingMarkers = db.recordingDao().markersForProperty(pid), transcriptSegments = db.recordingDao().segmentsForProperty(pid),
             )
         }
         BackupData(bundles, db.agentDao().questions().filter { !it.builtIn }, db.preferenceDao().list(), db.environmentDao().destinations())
@@ -50,7 +52,7 @@ class BackupManager(private val context: Context, private val db: CasaDatabase, 
         val data = collect(propertyIds).copy(settings = settings)
         val dataBytes = json.encodeToString(data).toByteArray()
         val fileRefs = data.properties.flatMap { b ->
-            b.photos.flatMap { listOfNotNull(it.filePath, it.thumbPath, it.editedPath) } + b.documentFiles.map { it.filePath }
+            b.photos.flatMap { listOfNotNull(it.filePath, it.thumbPath, it.editedPath) } + b.documentFiles.map { it.filePath } + b.recordings.map { it.filePath }
         }.distinct().filter { files.resolve(it)?.exists() == true && ZipSafety.isSafeName(it) }
         val hashes = fileRefs.associate { "files/$it" to FileStore.sha256(files.resolve(it)!!) }
         val manifest = BackupManifest(databaseVersion = CasaDatabase.VERSION, appVersion = BuildConfig.VERSION_NAME,
@@ -251,6 +253,16 @@ class BackupManager(private val context: Context, private val db: CasaDatabase, 
         b.environment.filter { it.itemCode !in localEnv }.forEach { db.environmentDao().upsert(it.copy(id = 0, propertyId = pid)) }
         val localDist = db.environmentDao().distances(pid).map { it.destinationId }.toSet()
         b.distances.forEach { d -> dMap[d.destinationId]?.takeIf { it !in localDist }?.let { db.environmentDao().upsertDistance(d.copy(id = 0, propertyId = pid, destinationId = it)) } }
+        // Viewing recordings (audio file + markers + transcript); skipped when the same recording already exists here.
+        val localRecs = db.recordingDao().list(pid).map { it.uuid }.toSet()
+        for (r in b.recordings) {
+            if (r.uuid in localRecs) continue
+            val path = copyFile(dir, r.filePath, pUuid) ?: continue
+            val rid = db.recordingDao().insert(r.copy(id = 0, propertyId = pid, filePath = path,
+                transcriptStatus = if (r.transcriptStatus == nl.ecannemeijer.casacheck.data.db.TxStatus.DONE) r.transcriptStatus else nl.ecannemeijer.casacheck.data.db.TxStatus.NONE))
+            b.recordingMarkers.filter { it.recordingId == r.id }.forEach { m -> db.recordingDao().insertMarker(m.copy(id = 0, recordingId = rid, itemId = m.itemId?.let { itemMap[it] })) }
+            db.recordingDao().insertSegments(b.transcriptSegments.filter { it.recordingId == r.id }.map { it.copy(id = 0, recordingId = rid) })
+        }
         return n
     }
 }

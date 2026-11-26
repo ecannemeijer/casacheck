@@ -808,4 +808,14 @@
     <string name="tx_badge_done">Transcriptie beschikbaar</string>
     <string name="tx_badge_running">Transcriptie bezig…</string>
     <string name="tx_badge_failed">Transcriptie mislukt</string>
+    <string name="report_include_transcripts">Opnames en transcripties opnemen</string>
+    <string name="section_recordings">Opnames van de bezichtiging</string>
+    <string name="report_transcript">Transcriptie (automatisch, op het toestel):</string>
+    <string name="report_transcript_translated">Transcriptie (automatisch vertaald, op het toestel):</string>
+    <string name="settings_wifi_models">Taal- en spraakmodellen alleen via wifi downloaden</string>
+    <string name="settings_recordings">Opnames</string>
+    <string name="settings_speech_model">Spraakmodel voor transcriptie: %1$s</string>
+    <string name="settings_speech_model_none">niet gedownload (57 MB, wordt gedownload bij de eerste transcriptie)</string>
+    <string name="settings_speech_model_present">op het toestel (57 MB)</string>
+    <string name="settings_speech_model_delete">Spraakmodel verwijderen</string>
 </resources>

@@ -80,6 +80,7 @@ fun ReportsPanel(c: AppContainer, nav: Nav, pid: Long?, compareIds: List<Long> =
     var photos by remember { mutableStateOf(true) }
     var notes by remember { mutableStateOf(true) }
     var listing by remember { mutableStateOf(false) }
+    var transcripts by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var toDelete by remember { mutableStateOf<Report?>(null) }
@@ -100,12 +101,13 @@ fun ReportsPanel(c: AppContainer, nav: Nav, pid: Long?, compareIds: List<Long> =
                 SwitchRow(stringResource(R.string.report_include_photos), photos) { photos = it }
                 SwitchRow(stringResource(R.string.report_include_notes), notes) { notes = it }
                 SwitchRow(stringResource(R.string.report_include_listing_photos), listing) { listing = it }
+                if (pid != null) SwitchRow(stringResource(R.string.report_include_transcripts), transcripts) { transcripts = it }
                 if (listing) Text(stringResource(R.string.listing_photos_copyright), style = MaterialTheme.typography.bodySmall)
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Button(enabled = !busy, onClick = {
                         busy = true; error = null
                         scope.launch {
-                            runCatching { c.reports.generate(ids, ReportOptions(type, lang, photos, notes, listing)) }
+                            runCatching { c.reports.generate(ids, ReportOptions(type, lang, photos, notes, listing, includeTranscripts = transcripts)) }
                                 .onSuccess { f -> Intents.open(ctx, f, "application/pdf") }
                                 .onFailure { error = it.message ?: it.javaClass.simpleName }
                             busy = false

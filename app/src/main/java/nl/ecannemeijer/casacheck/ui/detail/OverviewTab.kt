@@ -99,6 +99,7 @@ fun OverviewTab(vm: DetailVm, nav: Nav, goTab: (Int) -> Unit) {
     var showFeatures by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        nl.ecannemeijer.casacheck.ui.recording.RecordControl(p.id, onOpen = { goTab(TAB_RECORDINGS) })
         // ---- Warnings on top ----
         if (!p.featuresConfirmed) {
             WarningCard(stringResource(R.string.features_unconfirmed), MaterialTheme.colorScheme.tertiary)

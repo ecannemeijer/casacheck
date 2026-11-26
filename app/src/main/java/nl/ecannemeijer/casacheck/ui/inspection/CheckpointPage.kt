@@ -110,6 +110,13 @@ fun StatusButtons(current: CheckStatus, onSelect: (CheckStatus) -> Unit) {
 fun CheckpointPage(c: AppContainer, nav: Nav, item: ItemWithResult, roomName: String?, modifier: Modifier = Modifier) {
     val def = CheckpointLibrary.byCode[item.templateCode]
     val photos by remember(item.id) { c.photos.observeForItem(item.id) }.collectAsState(emptyList())
+    // While a viewing is being recorded, "Mark moment" links the marker to the checkpoint that is open.
+    val cpTitle = c.inspections.titleOf(item)
+    androidx.compose.runtime.DisposableEffect(item.id, cpTitle) {
+        val cp = nl.ecannemeijer.casacheck.data.recording.CurrentCheckpoint(item.propertyId, item.id, cpTitle)
+        nl.ecannemeijer.casacheck.data.recording.Recorder.checkpoint.value = cp
+        onDispose { if (nl.ecannemeijer.casacheck.data.recording.Recorder.checkpoint.value == cp) nl.ecannemeijer.casacheck.data.recording.Recorder.checkpoint.value = null }
+    }
     val scope = rememberCoroutineScope()
     var howOpen by rememberSaveable(item.id) { mutableStateOf(false) }
     var moreOpen by rememberSaveable(item.id) { mutableStateOf(false) }

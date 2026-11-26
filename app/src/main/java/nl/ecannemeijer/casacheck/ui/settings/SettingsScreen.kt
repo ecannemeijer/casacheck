@@ -157,8 +157,16 @@ fun SettingsScreen(c: AppContainer, nav: Nav) {
                 Text(stringResource(R.string.listing_photos_copyright), style = MaterialTheme.typography.bodySmall)
             }
             SectionCard(stringResource(R.string.translation_settings)) {
-                SwitchRow(stringResource(R.string.translate_wifi_only), s.translateWifiOnly) { b -> scope.launch { c.settings.update { it.copy(translateWifiOnly = b) } } }
+                SwitchRow(stringResource(R.string.settings_wifi_models), s.translateWifiOnly) { b -> scope.launch { c.settings.update { it.copy(translateWifiOnly = b) } } }
                 Text(stringResource(R.string.translate_wifi_only_help), style = MaterialTheme.typography.bodySmall)
+            }
+            SectionCard(stringResource(R.string.settings_recordings)) {
+                val model = remember { nl.ecannemeijer.casacheck.data.transcribe.WhisperModel(c.appContext) }
+                var present by remember { mutableStateOf(model.isPresent()) }
+                Text(stringResource(R.string.settings_speech_model, stringResource(if (present) R.string.settings_speech_model_present else R.string.settings_speech_model_none)), style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.rec_quality_note, nl.ecannemeijer.casacheck.data.audio.AudioMath.formatSize(nl.ecannemeijer.casacheck.data.audio.AudioMath.bytesPerHour()),
+                    nl.ecannemeijer.casacheck.data.audio.AudioMath.formatSize(c.recordings.freeBytes())), style = MaterialTheme.typography.bodySmall)
+                if (present) androidx.compose.material3.OutlinedButton(onClick = { model.delete(); present = false }) { Text(stringResource(R.string.settings_speech_model_delete)) }
             }
             SectionCard(stringResource(R.string.destinations)) {
                 Text(stringResource(R.string.destinations_help), style = MaterialTheme.typography.bodySmall)

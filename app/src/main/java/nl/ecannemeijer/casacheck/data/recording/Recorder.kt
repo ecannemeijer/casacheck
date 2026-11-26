@@ -28,6 +28,9 @@ data class RecState(
 /** The inspection checkpoint that is open on screen, so a marker can be linked to it. */
 data class CurrentCheckpoint(val propertyId: Long, val itemId: Long, val title: String)
 
+/** Request from the recording notification to open a property's recordings. */
+object RecordingNav { val openProperty = MutableStateFlow<Long?>(null) }
+
 object Recorder {
     internal val mutable = MutableStateFlow<RecState?>(null)
     val state: StateFlow<RecState?> = mutable.asStateFlow()

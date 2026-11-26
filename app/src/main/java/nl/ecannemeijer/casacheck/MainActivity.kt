@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) shared.value = parseShare(intent)
+        if (savedInstanceState == null) { shared.value = parseShare(intent); openRecording(intent) }
         val container = (application as CasaApp).container
         setContent {
             val settings by container.settings.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
@@ -41,6 +41,12 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         parseShare(intent)?.let { shared.value = it }
+        openRecording(intent)
+    }
+
+    private fun openRecording(intent: Intent?) {
+        val pid = intent?.getLongExtra(nl.ecannemeijer.casacheck.data.recording.RecordingService.EXTRA_OPEN_PROPERTY, -1L) ?: -1L
+        if (pid > 0) nl.ecannemeijer.casacheck.data.recording.RecordingNav.openProperty.value = pid
     }
 
     companion object {

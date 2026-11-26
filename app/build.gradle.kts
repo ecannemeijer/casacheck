@@ -23,12 +23,15 @@ val signingProps = Properties().apply {
 android {
     namespace = "nl.ecannemeijer.casacheck"
     compileSdk = 35
+    ndkVersion = "27.0.12077973"
 
     defaultConfig {
         applicationId = "nl.ecannemeijer.casacheck"
         minSdk = 26
         // Phones/tablets (ARM) plus x86_64 for the emulator; 32-bit x86 devices are practically non-existent.
         ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
+        // whisper.cpp is always built optimised (a -O0 debug build would be far too slow to transcribe)
+        externalNativeBuild { cmake { arguments += listOf("-DCMAKE_BUILD_TYPE=Release") } }
         targetSdk = 35
         versionCode = 3
         versionName = "1.0.2"
@@ -71,6 +74,12 @@ android {
     androidResources {
         @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
+    }
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
     packaging {
         resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/LICENSE*", "META-INF/NOTICE*")
